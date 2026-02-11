@@ -117,8 +117,8 @@ const NeonCursor = () => {
         transition={{
           type: 'spring',
           damping: 25,
-          stiffness: 250,
-          mass: 0.6,
+          stiffness: 450,
+          mass: 0.5,
         }}
         initial={false}
       />

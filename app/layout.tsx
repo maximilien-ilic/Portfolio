@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import LiquidEther from '../components/LiquidEther';
 import NeonCursor from '../components/NeonCursor';
+import Dither from '../components/Dither'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,45 +28,18 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NeonCursor />
-        <LiquidEther
-          colors={[
-            '#FD8D03',
-            '#FD8530',
-            '#FC7D45',
-            '#FB7555',
-            '#FB6D5C',
-            '#FB6763',
-            '#FC6F48',
-            '#FC7736',
-            '#FC7F24',
-            '#FC7203'
-          ]}
-          mouseForce={12}
-          cursorSize={150}
-          isViscous={true}
-          viscous={70}
-          iterationsViscous={40}
-          iterationsPoisson={40}
-          resolution={0.25}
-          dt={0.018}
-          BFECC={true}
-          isBounce={false}
-          autoDemo={true}
-          autoSpeed={0.25}
-          autoIntensity={2.0}
-          takeoverDuration={1.5}
-          autoResumeDelay={100}
-          autoRampDuration={2.0}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: -1
-          }}
-        />
-
+        <div style={{ width: '100%', height: '600px', position: 'relative' }}>
+          <Dither
+            waveColor={[0.5,0.5,0.5]}
+            disableAnimation={false}
+            enableMouseInteraction={false}
+            mouseRadius={0.3}
+            colorNum={4}
+            waveAmplitude={0.3}
+            waveFrequency={3}
+            waveSpeed={0.05}
+          />
+        </div>
         {children}
       </body>
     </html>

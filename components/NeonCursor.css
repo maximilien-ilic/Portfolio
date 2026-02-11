@@ -11,26 +11,18 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #A9151D;
-  box-shadow: 0 0 30px rgba(169, 21, 29, 0.9);
+  background: #ffffff;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
   pointer-events: none;
 }
 
-.cursor-trail {
-  position: fixed;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 3px solid #A9151D;
-  background: transparent;
-  pointer-events: none;
-}
+
 
 .cursor-glow {
   position: fixed;
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(169, 21, 29, 0.5) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
   pointer-events: none;
 }
