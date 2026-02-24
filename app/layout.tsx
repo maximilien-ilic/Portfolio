@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NeonCursor />
-        <div style={{ width: '100%', height: '600px', position: 'relative' }}>
+        <div style={{ width: '100%', height: '600px' }}>
           <Dither
             waveColor={[0.5,0.5,0.5]}
             disableAnimation={false}
