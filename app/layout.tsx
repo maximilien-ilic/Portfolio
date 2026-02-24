@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import NeonCursor from '../components/NeonCursor';
 import Dither from '../components/Dither'
 
 const geistSans = Geist({
@@ -26,11 +25,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <NeonCursor />
-        <div style={{ width: '100%', height: '600px' }}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ position: 'relative', minHeight: '100vh' }}>
+        <div style={{
+          position: 'fixed', 
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+        }}>
           <Dither
-            waveColor={[0.5,0.5,0.5]}
+            waveColor={[0.5, 0.5, 0.5]}
             disableAnimation={false}
             enableMouseInteraction={false}
             mouseRadius={0.3}
@@ -40,7 +45,11 @@ export default function RootLayout({
             waveSpeed={0.05}
           />
         </div>
-        {children}
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {children}
+        </div>
+
       </body>
     </html>
   );
