@@ -9,10 +9,9 @@
 .header {
   max-width: 900px;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 1);;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 3rem;
-  border-radius: 14px;
 }
 
 .title {
@@ -21,72 +20,77 @@
   color: white;
   margin-bottom: 2rem;
   text-align: center;
+  font-family: 'Courier New', monospace;
 }
 
 .subtitle {
-  font-size: 1.875rem;
+  font-size: 1.5rem;
   color: #cd1153;
   margin-bottom: 1.5rem;
   text-align: center;
-  font-weight: 600;
+  font-weight: 400;
+  font-family: 'Courier New', monospace;
 }
 
 .description {
-  font-size: 1.125rem;
-  color: #d1d5db;
+  font-size: 0.95rem;
+  color: #ffffff;
   line-height: 1.75;
   margin-bottom: 2rem;
   text-align: center;
   max-width: 750px;
   margin-left: auto;
   margin-right: auto;
+  font-family: 'Courier New', monospace;
 }
 
 .cta {
-  font-size: 1.25rem;
-  color: white;
+  font-size: 0.95rem;
+  color: #f1f5f9;
   margin-bottom: 2rem;
   text-align: center;
   font-weight: 300;
+  font-family: 'Courier New', monospace;
 }
 
 .contact {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  color: #cd1153;
+  gap: 0.75rem;
 }
 
 .contactItem {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
 }
 
 .label {
-  color: #9ca3af;
+  color: #ffffff;
 }
 
 .contactItem a {
   color: #cd1153;
   text-decoration: none;
-  transition: color 0.3s;
+  transition: color 0.2s ease;
 }
 
 .contactItem a:hover {
-  color: #cd1153;
+  color: #f1f5f9;
 }
 
 @media (max-width: 768px) {
   .title {
     font-size: 2rem;
   }
-  
+
   .subtitle {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
-  
+
   .header {
     padding: 2rem;
   }

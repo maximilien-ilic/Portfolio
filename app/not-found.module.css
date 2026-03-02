@@ -1,0 +1,57 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.terminal {
+  font-family: 'Courier New', monospace;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background-color: black;
+}
+
+.error {
+  color: #475569;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.output {
+  color: #cd1153;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.code {
+  font-size: 4rem;
+  font-weight: bold;
+  color: white;
+  margin: 1rem 0 0 0;
+  line-height: 1;
+}
+
+.message {
+  color: #475569;
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+}
+
+.link {
+  color: #cd1153;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+  width: fit-content;
+}
+
+.link:hover {
+  color: #f1f5f9;
+}

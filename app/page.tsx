@@ -2,12 +2,14 @@ import { div, h1, header } from "motion/react-client";
 import Image from "next/image";
 import Card from '@/components/Card';
 import { projects } from '@/data/projects';
-
+import Footer from '@/components/Footer';
 import styles from './page.module.css'
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
   return (
     <>
+    <Navbar />
       <div className={styles.container}>
         <header className={styles.header}>
           <h1 className={styles.title}>Maximilien Ilic</h1>
@@ -40,8 +42,13 @@ export default function Home() {
           </div>
         </header>
       </div>
-
-      <Card projects={projects} showTitle={true} />
+      <div id="projects">
+        <Card projects={projects} showTitle={true} />
+      </div>
+      <div id="contact">
+        <Footer />
+      </div>      
     </>
+    
   );
 }

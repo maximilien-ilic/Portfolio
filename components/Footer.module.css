@@ -1,0 +1,172 @@
+.footer {
+  width: 100%;
+  background: #000000;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 3rem 2rem 1rem;
+  margin-top: 6rem;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.terminalLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info {
+  color: #64748b;
+}
+
+.separator {
+  color: #475569;
+}
+
+.linkLabel {
+  color: #ef4444;
+}
+
+.link {
+  color: #f1f5f9;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #ef4444;
+}
+
+.formSection {
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.formTitle {
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #cd1153;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  color: #f1f5f9;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #475569;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #cd1153;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: 'Courier New', monospace;
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid #cd1153;
+  color: #cd1153;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+  background: #cd1153;
+  color: #000000;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.result {
+  text-align: center;
+  padding: 0.75rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #cd1153;
+  border: 1px solid #cd1153;
+}
+
+.backTop {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.backLink {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #cd1153;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: #f1f5f9;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .terminalLine {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .formTitle {
+    font-size: 1rem;
+  }
+}

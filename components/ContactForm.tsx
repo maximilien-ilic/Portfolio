@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import styles from './ContactForm.module.css';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -49,56 +50,66 @@ export default function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Prénom :</label>
-        <input
-          type="text"
-          name="prenom"
-          value={formData.prenom}
-          onChange={handleChange}
-          required
-        />
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Prénom :</label>
+          <input
+            type="text"
+            name="prenom"
+            placeholder="first_name"
+            value={formData.prenom}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Nom :</label>
+          <input
+            type="text"
+            name="nom"
+            placeholder="last_name"
+            value={formData.nom}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+        </div>
       </div>
 
-      <div>
-        <label>Nom :</label>
-        <input
-          type="text"
-          name="nom"
-          value={formData.nom}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <label>Email :</label>
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Email :</label>
         <input
           type="email"
           name="email"
+          placeholder="email@example.com"
           value={formData.email}
           onChange={handleChange}
           required
+          className={styles.input}
         />
       </div>
 
-      <div>
-        <label>Message :</label>
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Message :</label>
         <textarea
           name="message"
+          placeholder="your message..."
           value={formData.message}
           onChange={handleChange}
           required
           rows={5}
+          className={styles.textarea}
         />
       </div>
 
-      <button type="submit" disabled={loading}>
-        {loading ? 'Envoi...' : 'Envoyer'}
+      <button type="submit" disabled={loading} className={styles.button}>
+        {loading ? '> sending...' : '> send'}
       </button>
 
-      {resultat && <p>{resultat}</p>}
+      {resultat && <p className={styles.result}>{resultat}</p>}
     </form>
   );
 }
