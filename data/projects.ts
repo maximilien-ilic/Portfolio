@@ -18,8 +18,8 @@ export const projects: Project[] = [
     title: 'Secure Formula 1 CRUD Website',
     description: 'Mini Formula 1 website with full CRUD functionality, built following best practices in web development and secure coding (input validation, authentication, and protection against common web vulnerabilities: SQL injection, XSS, CSRF).',
     tags: ['PHP', 'MySQL', 'PDO', 'CSS'],
-    image: 'images/formule1.png',
-    video: null,
+    image: null,
+    video: 'videos/0.mp4',
     links: [
       { label: 'View on GitHub', url: 'https://github.com/maximilien-ilic/Crud-security-formula1' }
     ]
