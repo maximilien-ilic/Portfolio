@@ -30,7 +30,7 @@ export const projects: Project[] = [
     badge: 'web development',
     title: 'WordPress Child Theme — PSG x Miyazaki',
     description: 'A WordPress child theme based on the Miyazaki theme, customized for Paris Saint-Germain. Includes style overrides and template modifications tailored to the PSG branding.',
-    tags: ['WordPress', 'PHP', 'CSS'],
+    tags: ['WordPress', 'PHP', 'CSS','CMS'],
     image: null,
     video: '/videos/theme enfant miyazaki psg.mp4',
     links: [
@@ -40,14 +40,27 @@ export const projects: Project[] = [
   {
     slug: 'themed-button-navigator-blender',
     name: 'Themed Button Navigator for Blender',
-    badge: 'open source',
+    badge: 'Add-On',
     title: 'Blender Addon — Keyboard Navigator',
     description: 'A Blender addon that lets you navigate and execute operators using keyboard shortcuts. Browse through organized themes and quickly access 200+ Blender commands without touching your mouse.',
-    tags: ['Python', 'Blender', 'Add-on'],
+    tags: ['Python', 'Blender', 'Plugin'],
     image: null,
     video: 'videos/addonmp4.mp4',
     links: [
       { label: 'View on GitHub', url: 'https://github.com/maximilien-ilic/Add-on-Accessibility-Blender' }
     ]
-  }
+  },
+  {
+    slug: 'MVC-amusement-park',
+    name: 'MVC project for an amusement park booking website ',
+    badge: 'POO',
+    title: 'amusement park booking website',
+    description: 'The website lets users create an account, browse available activities in the amusement park, and reserve time slots. Each user can view and manage their bookings in a personal dashboard, while admins configure activities, schedules, and capacities.',
+    tags: ['PHP', 'CSS', 'MVC','PDO'],
+    image: null,
+    video: 'videos/0310(1).mp4',
+    links: [
+      { label: 'View on GitHub', url: 'https://github.com/Raphael-Vaxelaire/Exercice-PO' }
+    ]
+  }  
 ];
