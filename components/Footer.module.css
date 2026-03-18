@@ -15,21 +15,22 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
   color: #94a3b8;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid #cd1153;
 }
 
 .info {
-  color: #64748b;
+  color: #ffffff;
 }
 
 .separator {
-  color: #475569;
+  color: #ef4444;
 }
 
 .linkLabel {
@@ -86,7 +87,7 @@
 
 .input::placeholder,
 .textarea::placeholder {
-  color: #475569;
+  color: #ffffff;
 }
 
 .input:focus,
