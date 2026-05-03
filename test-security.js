@@ -1,0 +1,9 @@
+﻿const password = 'admin123';
+const apiKey = 'sk-prod-abc123456789';
+const query = 'SELECT * FROM users WHERE id=' + userId;
+
+function login(user, pass) {
+  if (user == 'admin' && pass == password) {
+    return true;
+  }
+}
