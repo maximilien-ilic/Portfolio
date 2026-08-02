@@ -3,47 +3,38 @@
 import { useState } from 'react';
 import styles from './ContactForm.module.css';
 
+const EMPTY_FORM = { prenom: '', nom: '', email: '', message: '' };
+
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    email: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
-  const [resultat, setResultat] = useState('');
+  const [result, setResult] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData((previous) => ({ ...previous, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setResultat('');
+    setResult('');
 
     try {
       const response = await fetch('/api/send', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
-        setResultat('Email envoyé avec succès !');
-        setFormData({ nom: '', prenom: '', email: '', message: '' });
+        setResult('Message sent successfully.');
+        setFormData(EMPTY_FORM);
       } else {
-        setResultat('Erreur lors de l\'envoi');
+        setResult('Something went wrong. Please try again.');
       }
-    } catch (error) {
-      setResultat('Erreur réseau');
+    } catch {
+      setResult('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -53,8 +44,9 @@ export default function ContactForm() {
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formRow}>
         <div className={styles.formGroup}>
-          <label className={styles.label}>Prénom :</label>
+          <label htmlFor="prenom" className={styles.label}>First name:</label>
           <input
+            id="prenom"
             type="text"
             name="prenom"
             placeholder="first_name"
@@ -66,8 +58,9 @@ export default function ContactForm() {
         </div>
 
         <div className={styles.formGroup}>
-          <label className={styles.label}>Nom :</label>
+          <label htmlFor="nom" className={styles.label}>Last name:</label>
           <input
+            id="nom"
             type="text"
             name="nom"
             placeholder="last_name"
@@ -80,8 +73,9 @@ export default function ContactForm() {
       </div>
 
       <div className={styles.formGroup}>
-        <label className={styles.label}>Email :</label>
+        <label htmlFor="email" className={styles.label}>Email:</label>
         <input
+          id="email"
           type="email"
           name="email"
           placeholder="email@example.com"
@@ -93,8 +87,9 @@ export default function ContactForm() {
       </div>
 
       <div className={styles.formGroup}>
-        <label className={styles.label}>Message :</label>
+        <label htmlFor="message" className={styles.label}>Message:</label>
         <textarea
+          id="message"
           name="message"
           placeholder="your message..."
           value={formData.message}
@@ -109,7 +104,7 @@ export default function ContactForm() {
         {loading ? '> sending...' : '> send'}
       </button>
 
-      {resultat && <p className={styles.result}>{resultat}</p>}
+      {result && <p className={styles.result} role="status">{result}</p>}
     </form>
   );
 }

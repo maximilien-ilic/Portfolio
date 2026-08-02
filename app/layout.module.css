@@ -1,0 +1,12 @@
+/* Owns the full-viewport placement and stacking of the Dither canvas;
+   Dither.css only makes the canvas fill this box. */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}

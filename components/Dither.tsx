@@ -2,7 +2,7 @@
 
 
 
-import { useRef, useEffect, forwardRef } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree, ThreeEvent } from '@react-three/fiber';
 import { EffectComposer, wrapEffect } from '@react-three/postprocessing';
 import { Effect } from 'postprocessing';
@@ -138,9 +138,9 @@ void mainImage(in vec4 inputColor, in vec2 uv, out vec4 outputColor) {
 `;
 
 class RetroEffectImpl extends Effect {
-  public uniforms: Map<string, THREE.Uniform<any>>;
+  public uniforms: Map<string, THREE.Uniform<number>>;
   constructor() {
-    const uniforms = new Map<string, THREE.Uniform<any>>([
+    const uniforms = new Map<string, THREE.Uniform<number>>([
       ['colorNum', new THREE.Uniform(4.0)],
       ['pixelSize', new THREE.Uniform(2.0)]
     ]);
@@ -161,16 +161,14 @@ class RetroEffectImpl extends Effect {
   }
 }
 
-const RetroEffect = forwardRef<RetroEffectImpl, { colorNum: number; pixelSize: number }>((props, ref) => {
-  const { colorNum, pixelSize } = props;
-  const WrappedRetroEffect = wrapEffect(RetroEffectImpl);
-  return <WrappedRetroEffect ref={ref} colorNum={colorNum} pixelSize={pixelSize} />;
-});
+// Wrapped once at module scope: calling wrapEffect() during render would
+// create a new component type each pass and remount the effect every frame.
+const RetroEffect = wrapEffect(RetroEffectImpl);
 
-RetroEffect.displayName = 'RetroEffect';
-
-interface WaveUniforms {
-  [key: string]: THREE.Uniform<any>;
+// A type alias, not an interface: TS grants object-literal aliases an implicit
+// index signature, which is what shaderMaterial's uniforms prop requires. An
+// explicit `[key: string]` entry would erase the per-field value types.
+type WaveUniforms = {
   time: THREE.Uniform<number>;
   resolution: THREE.Uniform<THREE.Vector2>;
   waveSpeed: THREE.Uniform<number>;
@@ -180,7 +178,7 @@ interface WaveUniforms {
   mousePos: THREE.Uniform<THREE.Vector2>;
   enableMouseInteraction: THREE.Uniform<number>;
   mouseRadius: THREE.Uniform<number>;
-}
+};
 
 interface DitheredWavesProps {
   waveSpeed: number;
@@ -209,31 +207,44 @@ function DitheredWaves({
   const mouseRef = useRef(new THREE.Vector2());
   const { viewport, size, gl } = useThree();
 
-  const waveUniformsRef = useRef<WaveUniforms>({
-    time: new THREE.Uniform(0),
-    resolution: new THREE.Uniform(new THREE.Vector2(0, 0)),
-    waveSpeed: new THREE.Uniform(waveSpeed),
-    waveFrequency: new THREE.Uniform(waveFrequency),
-    waveAmplitude: new THREE.Uniform(waveAmplitude),
-    waveColor: new THREE.Uniform(new THREE.Color(...waveColor)),
-    mousePos: new THREE.Uniform(new THREE.Vector2(0, 0)),
-    enableMouseInteraction: new THREE.Uniform(enableMouseInteraction ? 1 : 0),
-    mouseRadius: new THREE.Uniform(mouseRadius)
-  });
+  // Constants only, so the factory closes over nothing and the deps are honestly
+  // empty: useFrame below re-syncs every one of these from props each frame, and
+  // the useEffect underneath owns `resolution`.
+  const waveUniforms = useMemo<WaveUniforms>(
+    () => ({
+      time: new THREE.Uniform(0),
+      resolution: new THREE.Uniform(new THREE.Vector2(0, 0)),
+      waveSpeed: new THREE.Uniform(0),
+      waveFrequency: new THREE.Uniform(0),
+      waveAmplitude: new THREE.Uniform(0),
+      waveColor: new THREE.Uniform(new THREE.Color()),
+      mousePos: new THREE.Uniform(new THREE.Vector2(0, 0)),
+      enableMouseInteraction: new THREE.Uniform(0),
+      mouseRadius: new THREE.Uniform(0)
+    }),
+    []
+  );
 
   useEffect(() => {
     const dpr = gl.getPixelRatio();
     const newWidth = Math.floor(size.width * dpr);
     const newHeight = Math.floor(size.height * dpr);
-    const currentRes = waveUniformsRef.current.resolution.value;
+    const currentRes = waveUniforms.resolution.value;
     if (currentRes.x !== newWidth || currentRes.y !== newHeight) {
       currentRes.set(newWidth, newHeight);
     }
-  }, [size, gl]);
+  }, [size, gl, waveUniforms]);
 
-  const prevColor = useRef([...waveColor]);
+  // NaN never equals anything, so the first frame always pushes waveColor into
+  // the uniform created above with a default Color.
+  const prevColor = useRef([NaN, NaN, NaN]);
+  /* Mutating the uniforms in place is the three.js contract: the shader reads
+     them straight off this object each frame, and they never feed React
+     rendering. react-hooks/immutability can't model that, hence the scoped
+     exception below rather than copying the object 60 times a second. */
+  /* eslint-disable react-hooks/immutability */
   useFrame(({ clock }) => {
-    const u = waveUniformsRef.current;
+    const u = waveUniforms;
 
     if (!disableAnimation) {
       u.time.value = clock.getElapsedTime();
@@ -255,6 +266,7 @@ function DitheredWaves({
       u.mousePos.value.copy(mouseRef.current);
     }
   });
+  /* eslint-enable react-hooks/immutability */
 
   const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
     if (!enableMouseInteraction) return;
@@ -270,7 +282,7 @@ function DitheredWaves({
         <shaderMaterial
           vertexShader={waveVertexShader}
           fragmentShader={waveFragmentShader}
-          uniforms={waveUniformsRef.current}
+          uniforms={waveUniforms}
         />
       </mesh>
 

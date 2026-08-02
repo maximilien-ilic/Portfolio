@@ -1,6 +1,11 @@
-'use client';
-
 import ContactForm from './ContactForm';
+import {
+  CONTACT_EMAIL,
+  GITHUB_HANDLE,
+  GITHUB_URL,
+  LINKEDIN_HANDLE,
+  LINKEDIN_URL,
+} from '@/data/site';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -11,18 +16,18 @@ export default function Footer() {
           <span className={styles.info}>Web Developer | Cybersecurity Student</span>
           <span className={styles.separator}>·</span>
           <span className={styles.linkLabel}>GitHub:</span>
-          <a href="https://github.com/maximilien-ilic" className={styles.link} target="_blank" rel="noopener noreferrer">
-            @maximilien-ilic
+          <a href={GITHUB_URL} className={styles.link} target="_blank" rel="noopener noreferrer">
+            {GITHUB_HANDLE}
           </a>
           <span className={styles.separator}>·</span>
           <span className={styles.linkLabel}>email:</span>
-          <a href="mailto:maximilien.ilic@gmail.com" className={styles.link}>
-            maximilien.ilic@gmail.com
+          <a href={`mailto:${CONTACT_EMAIL}`} className={styles.link}>
+            {CONTACT_EMAIL}
           </a>
           <span className={styles.separator}>·</span>
           <span className={styles.linkLabel}>LinkedIn:</span>
-          <a href="https://linkedin.com/in/maximilien-ilic" className={styles.link} target="_blank" rel="noopener noreferrer">
-            /in/maximilien-ilic
+          <a href={LINKEDIN_URL} className={styles.link} target="_blank" rel="noopener noreferrer">
+            {LINKEDIN_HANDLE}
           </a>
         </div>
 
