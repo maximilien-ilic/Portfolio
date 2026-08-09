@@ -1,0 +1,52 @@
+.sky {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Behind the hero copy. Clouds are lighter than the sky they cross, so
+     dark text over one only ever gains contrast. */
+  z-index: 0;
+}
+
+.cloud {
+  position: absolute;
+  left: 0;
+  animation-name: crossing;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+/* -100% is the cloud's own width, so one keyframe pair works for every size. */
+@keyframes crossing {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The sky keeps its clouds, it just stops moving them. */
+  .cloud {
+    animation: none;
+    transform: translateX(var(--parked, 30vw));
+  }
+
+  .cloud:nth-child(2) {
+    --parked: 62vw;
+  }
+
+  .cloud:nth-child(3) {
+    --parked: 8vw;
+  }
+
+  .cloud:nth-child(4) {
+    --parked: 78vw;
+  }
+
+  .cloud:nth-child(5) {
+    --parked: 46vw;
+  }
+}

@@ -1,97 +1,135 @@
-.container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
+/* The page crosses the horizon once: a cel-banded sky, the ocean, then
+   everything else is underwater. */
+
+/* --- Hero ---------------------------------------------------------- */
+
+.hero {
+  /* One flat step below the nav. The sky keeps paling in the ocean's own
+     top band, so the banding lands on structure instead of across the name. */
+  position: relative;
+  background: var(--sky);
+  color: var(--ink);
+  overflow: hidden;
 }
 
-.header {
-  max-width: 900px;
-  width: 100%;
-  background: rgba(0, 0, 0, 1);;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 3rem;
+.heroInner {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(3.5rem, 9vw, 6.5rem) clamp(3rem, 7vw, 5rem);
 }
 
-.title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 2rem;
-  text-align: center;
-  font-family: 'Courier New', monospace;
+.coords {
+  color: var(--ground);
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.subtitle {
-  font-size: 1.5rem;
-  color: #cd1153;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  font-weight: 400;
-  font-family: 'Courier New', monospace;
+.name {
+  font-size: var(--step-4);
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+  color: var(--ink);
+  /* The name is the largest thing on the page; it gets to break its own way. */
+  max-width: 12ch;
 }
 
-.description {
-  font-size: 0.95rem;
-  color: #ffffff;
-  line-height: 1.75;
-  margin-bottom: 2rem;
-  text-align: center;
-  max-width: 750px;
-  margin-left: auto;
-  margin-right: auto;
-  font-family: 'Courier New', monospace;
+.role {
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: var(--step-2);
+  color: var(--ground);
+  letter-spacing: -0.01em;
 }
 
-.cta {
-  font-size: 0.95rem;
-  color: #f1f5f9;
-  margin-bottom: 2rem;
-  text-align: center;
-  font-weight: 300;
-  font-family: 'Courier New', monospace;
+.intro {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(1.75rem, 3vw, 2.25rem);
+  max-width: var(--measure);
+  color: var(--haze);
+  font-size: var(--step-1);
 }
 
 .contact {
+  margin: clamp(2rem, 4vw, 2.75rem) 0 0;
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+
+.contactRow {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  align-items: baseline;
   gap: 0.75rem;
 }
 
-.contactItem {
+.contactKey {
+  margin: 0;
+  color: var(--haze);
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+}
+
+.contactValue {
+  margin: 0;
+  color: var(--ink);
+}
+
+.contactValue a {
+  text-decoration-color: var(--haze);
+}
+
+.contactValue a:hover {
+  text-decoration-color: var(--ink);
+}
+
+/* --- Work ---------------------------------------------------------- */
+
+.work {
+  background: var(--ground);
+}
+
+.workInner {
+  /* The ocean's last band already opens the section, so the top is tight. */
+  padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(4rem, 9vw, 7rem);
+}
+
+.workHead {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.workTitle {
+  font-size: var(--step-3);
+  color: var(--foam);
+}
+
+.workCount {
+  color: var(--mist);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
+  gap: 1.25rem;
+  flex: 1;
 }
 
-.label {
-  color: #ffffff;
+.workCount::before {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: var(--sea);
 }
 
-.contactItem a {
-  color: #cd1153;
-  text-decoration: none;
-  transition: color 0.2s ease;
+.grid {
+  display: grid;
+  /* Generous, because every card's shadow needs somewhere to fall. */
+  gap: clamp(2rem, 4vw, 3rem);
 }
 
-.contactItem a:hover {
-  color: #f1f5f9;
-}
-
-@media (max-width: 768px) {
-  .title {
-    font-size: 2rem;
-  }
-
-  .subtitle {
-    font-size: 1.2rem;
-  }
-
-  .header {
-    padding: 2rem;
+@media (min-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

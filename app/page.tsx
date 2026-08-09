@@ -1,52 +1,86 @@
-import Card from '@/components/Card';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
+import Clouds from '@/components/Clouds';
+import Ocean from '@/components/Ocean';
+import ProjectCard from '@/components/ProjectCard';
+import SiteFooter from '@/components/SiteFooter';
+import SiteNav from '@/components/SiteNav';
 import { projects } from '@/data/projects';
-import { CONTACT_EMAIL, GITHUB_HANDLE, GITHUB_URL } from '@/data/site';
+import {
+  CONTACT_EMAIL,
+  COORDINATES,
+  GITHUB_HANDLE,
+  GITHUB_URL,
+  INTRO,
+  NAME,
+  ROLE
+} from '@/data/site';
 import styles from './page.module.css';
 
 export default function Home() {
   return (
     <>
-    <Navbar />
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>Maximilien Ilic</h1>
+      <SiteNav />
 
-          <h2 className={styles.subtitle}>
-            Web Developer | Cybersecurity Student
-          </h2>
+      <main id="top">
+        <section className={styles.hero}>
+          <Clouds />
 
-          <p className={styles.description}>
-            I&apos;m a cybersecurity student with a passion for web development.
-            I combine technical expertise with creative problem-solving to build
-            secure, scalable applications and explore the intersection of security
-            and modern web technologies.
-          </p>
+          <div className={`shell ${styles.heroInner}`}>
+            <p className={`readout ${styles.coords}`}>{COORDINATES}</p>
 
-          <p className={styles.cta}>
-            Interested in cybersecurity or AI/web development? Let&apos;s talk.
-          </p>
+            <h1 className={styles.name}>{NAME}</h1>
+            <p className={styles.role}>{ROLE}</p>
 
-          <div className={styles.contact}>
-            <div className={styles.contactItem}>
-              <span className={styles.label}>github:</span>
-              <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">{GITHUB_HANDLE}</a>
+            <div className={styles.intro}>
+              {INTRO.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
             </div>
 
-            <div className={styles.contactItem}>
-              <span className={styles.label}>email:</span>
-              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            <dl className={styles.contact}>
+              <div className={styles.contactRow}>
+                <dt className={`readout ${styles.contactKey}`}>github</dt>
+                <dd className={styles.contactValue}>
+                  <a
+                    href={GITHUB_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {GITHUB_HANDLE}
+                  </a>
+                </dd>
+              </div>
+
+              <div className={styles.contactRow}>
+                <dt className={`readout ${styles.contactKey}`}>email</dt>
+                <dd className={styles.contactValue}>
+                  <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <Ocean />
+
+        <section id="projects" className={styles.work}>
+          <div className={`shell ${styles.workInner}`}>
+            <div className={styles.workHead}>
+              <h2 className={styles.workTitle}>Projects</h2>
+              <p className={`readout ${styles.workCount}`}>
+                {String(projects.length).padStart(2, '0')} charted
+              </p>
+            </div>
+
+            <div className={styles.grid}>
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
             </div>
           </div>
-        </header>
-      </div>
-      <div id="projects">
-        <Card projects={projects} />
-      </div>
-      <div id="contact">
-        <Footer />
-      </div>
+        </section>
+      </main>
+
+      <SiteFooter />
     </>
   );
 }

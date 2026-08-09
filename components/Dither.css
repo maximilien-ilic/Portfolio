@@ -1,7 +1,0 @@
-/* Fills whatever element positions it. Stacking is the caller's job — see
-   .background in app/layout.module.css, which owns the fixed full-viewport
-   placement and the z-index this canvas sits at. */
-.dither-container {
-  position: absolute;
-  inset: 0;
-}

@@ -1,36 +1,56 @@
-import type { Metadata } from "next";
-import Dither from "@/components/Dither";
-import styles from "./layout.module.css";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Bricolage_Grotesque, Instrument_Sans, Martian_Mono } from 'next/font/google';
+import { NAME, ROLE, SUMMARY } from '@/data/site';
+import './globals.css';
+
+/* Display has hand-cut, slightly irregular contours — the chunky character
+   the reference frames carry. Body stays quiet. Mono is the instrument
+   readout and never appears above 13px. */
+const display = Bricolage_Grotesque({
+  subsets: ['latin'],
+  weight: ['600', '700', '800'],
+  variable: '--font-display',
+  display: 'swap'
+});
+
+const body = Instrument_Sans({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap'
+});
+
+const mono = Martian_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap'
+});
 
 export const metadata: Metadata = {
-  title: "Maximilien Ilic — Web Developer & Cybersecurity Student",
-  description:
-    "Portfolio of Maximilien Ilic, cybersecurity student and web developer building secure, scalable web applications.",
+  title: `${NAME} — ${ROLE}`,
+  description: SUMMARY,
+  openGraph: {
+    title: `${NAME} — ${ROLE}`,
+    description: SUMMARY,
+    type: 'website'
+  }
 };
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable} ${mono.variable}`}
+    >
       <body>
-        <div className={styles.background}>
-          <Dither
-            waveColor={[0.5, 0.5, 0.5]}
-            disableAnimation={false}
-            enableMouseInteraction={false}
-            mouseRadius={0.3}
-            colorNum={4}
-            waveAmplitude={0.3}
-            waveFrequency={3}
-            waveSpeed={0.05}
-          />
-        </div>
-
-        <div className={styles.content}>{children}</div>
+        <a className="skipLink" href="#projects">
+          Skip to projects
+        </a>
+        {children}
       </body>
     </html>
   );

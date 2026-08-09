@@ -1,0 +1,123 @@
+/* Band heights are multiples of --px, so every edge lands on the pixel grid
+   instead of halfway across a cell. Only transform is animated, so the three
+   foam layers stay on the compositor. */
+
+.ocean {
+  position: relative;
+  width: 100%;
+  border-top: calc(var(--px) * 1) solid var(--ink);
+  overflow: hidden;
+  user-select: none;
+}
+
+.band {
+  position: relative;
+  overflow: hidden;
+}
+
+.shoal {
+  height: calc(var(--px) * 30);
+  /* A hard step, not a fade: the water pales as it reaches the horizon. */
+  background: linear-gradient(
+    to bottom,
+    var(--sky-low) 0 calc(var(--px) * 5),
+    var(--shallow) calc(var(--px) * 5)
+  );
+}
+
+.open {
+  height: calc(var(--px) * 26);
+  background: var(--sea);
+  border-top: calc(var(--px) * 1) solid var(--ink);
+}
+
+/* The last band is the page's own ground, so the ocean has no bottom edge —
+   the water simply becomes everything below it. */
+.deep {
+  height: calc(var(--px) * 16);
+  background: var(--ground);
+  border-top: calc(var(--px) * 1) solid var(--ink);
+}
+
+/* --- Foam ---------------------------------------------------------- */
+
+.foam {
+  position: absolute;
+  top: 0;
+  /* Parked one tile to the left, so travelling one tile to the right never
+     exposes the end of the track. */
+  left: calc(var(--px) * -240);
+  /* The track is deliberately far wider than its parent. Without this the
+     global svg max-width squeezes five tiles into one viewport and every
+     cell stops being square. */
+  max-width: none;
+  fill: #d5f2fa;
+  will-change: transform;
+}
+
+.shoal .foam {
+  opacity: 0.9;
+}
+
+.open .foam {
+  opacity: 0.72;
+}
+
+.deep .foam {
+  opacity: 0.3;
+}
+
+/* Everything drifts with the wind, left to right, exactly one tile. */
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(var(--px) * 240), 0, 0);
+  }
+}
+
+.drift-shoal {
+  animation: drift 96s linear infinite;
+}
+
+.drift-open {
+  animation: drift 64s linear infinite;
+}
+
+.drift-deep {
+  animation: drift 140s linear infinite;
+}
+
+/* --- Boat ---------------------------------------------------------- */
+
+.boat {
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--px) * 2);
+  z-index: 2;
+  /* The negative delay drops it mid-crossing, so it is already out there
+     when the page loads rather than waiting off-frame for a minute. */
+  animation: sail 150s linear -52s infinite;
+}
+
+@keyframes sail {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The sea keeps its foam and its boat, it just stops moving them. */
+  .boat {
+    animation: none;
+    transform: translateX(58vw);
+  }
+
+  .foam {
+    animation: none;
+  }
+}

@@ -9,21 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@react-email/components": "^1.0.6",
-    "@react-three/fiber": "^9.5.0",
-    "@react-three/postprocessing": "^3.0.4",
     "next": "^16.2.12",
-    "postprocessing": "^6.38.2",
     "react": "^19.2.3",
-    "react-dom": "19.2.3",
-    "resend": "^6.9.1",
-    "three": "^0.182.0"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/three": "^0.182.0",
     "eslint": "^9",
     "eslint-config-next": "^16.2.12",
     "typescript": "^5"

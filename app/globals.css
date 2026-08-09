@@ -1,28 +1,206 @@
+/* ---------------------------------------------------------------
+   The Great Sea — see DESIGN.md.
+   The page crosses the horizon: a cel-banded sky at the top, the
+   ocean, then everything below sits underwater. Flat colour steps,
+   hard ink edges, no gradients, no blur.
+   Every text pair here was measured against WCAG AA. --sea is a fill
+   colour only: it lands at 2.77:1 on a card and is never used for text.
+   --------------------------------------------------------------- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Above the horizon. Three steps, each one aligned to a structural edge —
+     the nav, the hero, the top of the water — so no band ever cuts through
+     a line of text. */
+  --sky-high: #4fb0e4;
+  --sky: #6cc4ec;
+  --sky-low: #8fd8f2;
+
+  /* The water */
+  --shallow: #56c4e8;
+  --sea: #0f7cc8;
+
+  /* Below the horizon */
+  --ground: #04203f;
+  --plate: #0b3564;
+  --trench: #03152c;
+
+  /* Ink and light */
+  --ink: #04162c;
+  --foam: #eaf7fb;
+  --mist: #9fc3df;
+  /* Muted text where the ground is sky rather than water. */
+  --haze: #0d3a63;
+
+  /* Accents */
+  --gold: #f4c542;
+  --sail: #e4573c;
+
+  /* Tag tones — one per kind of technology, not one per tag */
+  --t-lang: #f4c542;
+  --t-data: #7ed0ec;
+  --t-platform: #a8d96a;
+  --t-craft: #e8c8a0;
+
+  /* Type scale */
+  --step--1: 0.75rem;
+  --step-0: 1rem;
+  --step-1: 1.125rem;
+  --step-2: clamp(1.25rem, 1.05rem + 0.9vw, 1.5rem);
+  --step-3: clamp(1.75rem, 1.3rem + 2.1vw, 2.5rem);
+  --step-4: clamp(3rem, 1.2rem + 8vw, 7rem);
+
+  /* Rhythm */
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --shell: 1220px;
+  --measure: 60ch;
+
+  /* Cel construction */
+  --edge: 3px;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  /* One art pixel, in CSS pixels. Every drawn thing is sized off this, and it
+     only ever takes whole values — a fractional cell is a blurred cell. */
+  --px: 4px;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (min-width: 1024px) {
   :root {
-    --background: #000000;
-    --foreground: #ededed;
+    --px: 5px;
   }
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
 }
 
 body {
+  margin: 0;
   min-height: 100vh;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ground);
+  color: var(--foam);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--sea);
+}
+
+a:hover {
+  text-decoration-color: var(--gold);
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Two rings, because the page has two grounds: gold reads underwater
+   (7.6:1 on a card) but disappears on the sky, where the ink ring hugging
+   the element carries it instead (7.5:1). One of the two is always visible. */
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+/* --- Shared primitives --------------------------------------------- */
+
+.shell {
+  max-width: var(--shell);
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Instrument label: the HUD vernacular from the racing reference. */
+.readout {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--step--1);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skipLink {
+  position: fixed;
+  left: var(--gutter);
+  top: -6rem;
+  z-index: 50;
+  padding: 0.75rem 1.25rem;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  border: var(--edge) solid var(--ink);
+  transition: top 200ms var(--ease);
+}
+
+.skipLink:focus {
+  top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,16 +1,33 @@
 import Link from 'next/link';
+import Clouds from '@/components/Clouds';
+import Ocean from '@/components/Ocean';
+import SiteNav from '@/components/SiteNav';
 import styles from './not-found.module.css';
 
 export default function NotFound() {
   return (
-    <div className={styles.container}>
-      <div className={styles.terminal}>
-        <p className={styles.error}>$ cd /page-that-exists</p>
-        <p className={styles.output}>bash: cd: /page-that-exists: No such file or directory</p>
-        <p className={styles.code}>404</p>
-        <p className={styles.message}>This page doesn&apos;t exist.</p>
-        <Link href="/" className={styles.link}>$ cd ~</Link>
-      </div>
-    </div>
+    <>
+      <SiteNav />
+
+      <main className={styles.page}>
+        <Clouds />
+
+        <div className={`shell ${styles.inner}`}>
+          <p className={`readout ${styles.code}`}>Error 404</p>
+          <h1 className={styles.title}>No chart for this one</h1>
+
+          <p className={styles.message}>
+            That page is not here. It may have been renamed, or the link that
+            brought you was already out of date.
+          </p>
+
+          <Link className={`readout ${styles.link}`} href="/">
+            <span aria-hidden="true">← </span>Back to the start
+          </Link>
+        </div>
+
+        <Ocean />
+      </main>
+    </>
   );
 }

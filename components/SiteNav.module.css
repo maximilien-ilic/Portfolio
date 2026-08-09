@@ -1,0 +1,63 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--sky-high);
+  color: var(--ink);
+  border-bottom: var(--edge) solid var(--ink);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4.25rem;
+}
+
+.wordmark {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.0625rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  padding-block: 0.75rem;
+}
+
+.wordmark:hover {
+  color: var(--ground);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 2rem);
+}
+
+.link {
+  color: var(--haze);
+  text-decoration: none;
+  /* Keeps the tap target at 44px without changing the visual rhythm. */
+  padding: 0.75rem 0;
+  border-bottom: 3px solid transparent;
+  transition: color 180ms var(--ease), border-color 180ms var(--ease);
+}
+
+.link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+@media (max-width: 420px) {
+  .inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding-block: 0.5rem;
+  }
+
+  .nav {
+    gap: 1.25rem;
+  }
+}
