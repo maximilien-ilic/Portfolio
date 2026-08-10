@@ -43,4 +43,5 @@ next-env.d.ts
 # certificates
 certificates
 
-.claude
+# agent tooling — local to this machine, not part of the site
+.claude/
