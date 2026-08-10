@@ -1,0 +1,74 @@
+/* The screen fills in cell by cell, holds, then empties the same way. Every
+   change is a hard cut: a cell is black, or it is its tone, or it is gone.
+   Nothing here fades. */
+
+.opening {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  /* What the first frame shows, and what every cell starts as. The grid is
+     drawn from a seed that can only be picked on the client, so for one frame
+     there is no grid — and this is the same black it would have been anyway. */
+  background: var(--ink);
+  /* Nothing to click: the opening has no controls, and the page underneath is
+     complete the whole time. */
+  pointer-events: none;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Sized by its viewBox. Letting the global svg max-width reach it would
+     squash the cell grid, and at this scale that is the first thing anyone
+     would notice. */
+  max-width: none;
+}
+
+/* Two state flips, each an instant, each on its own clock. The delays come
+   from the component — one draw for when a cell lands, an unrelated one for
+   when it goes — and a one-millisecond step is what makes each change a cut
+   rather than a blend. Nothing here interpolates. */
+.cell {
+  animation-name: tone, clear;
+  animation-duration: 1ms, 1ms;
+  animation-timing-function: steps(1, end), steps(1, end);
+  animation-fill-mode: both, both;
+}
+
+/* Black until this cell's turn, then its tone. */
+@keyframes tone {
+  from {
+    fill: var(--ink);
+  }
+  to {
+    fill: var(--tone);
+  }
+}
+
+/* Gone at its turn, revealing the page — which has been sitting there
+   complete the whole time. */
+@keyframes clear {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* The head script marks the run before first paint, so a returning visitor
+   never catches a frame of something about to unmount itself. */
+:global([data-intro='skip']) .opening {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The opening never reaches this file with reduced motion on — the head
+     script marks it skipped. This is the backstop for a stylesheet that
+     arrives without the script. */
+  .opening {
+    display: none;
+  }
+}

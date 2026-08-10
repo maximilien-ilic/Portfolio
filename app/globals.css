@@ -15,6 +15,12 @@
   --sky: #6cc4ec;
   --sky-low: #8fd8f2;
 
+  /* Two steps between the three sky tones, so the opening's dithered
+     gradient has five stops instead of three and the banding disappears at
+     arm's length. Fill colours only — no text ever sits on them. */
+  --sky-step-2: #7ccef0;
+  --sky-step-4: #5dbae8;
+
   /* The water */
   --shallow: #56c4e8;
   --sea: #0f7cc8;
@@ -23,6 +29,23 @@
   --ground: #04203f;
   --plate: #0b3564;
   --trench: #03152c;
+
+  /* Depth zones. The descent passes through biomes instead of one navy
+     holding every screen below the water: open water, then kelp, then the
+     deep. Each is a flat step with a hard ink edge — never a fade. Measured
+     against --foam / --mist / --gold in that order:
+       --zone-kelp   11.90 : 7.03 : 8.01
+       --zone-abyss  15.05 : 8.90 : 10.13
+     Cards keep --plate on every zone, the way a game's textbox stays put
+     while the route around it changes. */
+  --zone-kelp: #06382e;
+  --zone-abyss: #171a47;
+
+  /* Seabed crests. Fill colours only, like --sea: they carry the ridge that
+     sits behind each zone's floor and never sit under text. */
+  --zone-kelp-crest: #0d5a42;
+  --zone-abyss-crest: #2a2d6b;
+
 
   /* Ink and light */
   --ink: #04162c;
@@ -139,6 +162,13 @@ ul {
   outline: 3px solid var(--gold);
   outline-offset: 2px;
   box-shadow: 0 0 0 2px var(--ink);
+}
+
+/* The parts nobody draws still belong to the palette. Gold on ink is the
+   same pair the focus ring uses, and it reads on both grounds. */
+::selection {
+  background: var(--gold);
+  color: var(--ink);
 }
 
 /* --- Shared primitives --------------------------------------------- */

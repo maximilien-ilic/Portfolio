@@ -45,7 +45,23 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${display.variable} ${body.variable} ${mono.variable}`}
+      /* The head script writes data-intro and data-stage onto this element
+         before React hydrates, so the server's markup and the live DOM
+         legitimately differ here. Suppression reaches one level only, which
+         is exactly the depth of that difference. */
+      suppressHydrationWarning
     >
+      <head>
+        {/* Decides the dawn before first paint. A returning visitor, or
+            anyone who asked for less motion, must never catch a frame of a
+            title card that is about to remove itself — which is a call only
+            the client can make, and only before the first paint. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('greatsea.opening')||matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.dataset.intro='skip';document.documentElement.dataset.stage='ready'}}catch(e){document.documentElement.dataset.stage='ready'}`
+          }}
+        />
+      </head>
       <body>
         <a className="skipLink" href="#projects">
           Skip to projects

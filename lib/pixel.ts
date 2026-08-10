@@ -172,3 +172,137 @@ export function foamNet(seed: number, options: FoamOptions): Run[] {
 
   return runs;
 }
+
+interface TerrainOptions {
+  /** Tile width in cells. The walk is steered back to its starting height
+      before the tile ends, so the tile repeats without a seam. */
+  width: number;
+  /** Strip height in cells. The floor fills from its top edge downwards. */
+  height: number;
+  /** How far the surface may climb above its base. */
+  relief?: number;
+  /** How many cells a step keeps its heading. Long holds read as ledges,
+      short ones as gravel. */
+  hold?: number;
+}
+
+/** The seabed: a seeded walk along the top edge, filled to the bottom.
+
+    Same construction as the foam — a heading held for several cells at a
+    time, so the silhouette comes out as ledges and slopes rather than as
+    noise. Deterministic from the seed, so it is the same floor on the
+    server and in the browser. */
+export function terrain(seed: number, options: TerrainOptions): Run[] {
+  const { width, height, relief = 4, hold = 6 } = options;
+  const random = rng(seed);
+  const runs: Run[] = [];
+
+  const base = height - 1;
+  const ceiling = Math.max(0, base - relief);
+  const tops: number[] = [];
+
+  let top = base;
+  let steps = 0;
+  let heading = 0;
+
+  for (let x = 0; x < width; x += 1) {
+    if (steps <= 0) {
+      heading = Math.floor(random() * 3) - 1;
+      steps = 1 + Math.floor(random() * hold);
+    }
+
+    top = Math.min(base, Math.max(ceiling, top + heading));
+    steps -= 1;
+    tops.push(top);
+  }
+
+  /* Ease the tail back to the height the tile started at. Without this the
+     seam between two copies is a cliff. */
+  const tail = Math.min(width, relief * 4);
+  for (let i = 0; i < tail; i += 1) {
+    const x = width - tail + i;
+    tops[x] = Math.round(tops[x] + ((base - tops[x]) * (i + 1)) / tail);
+  }
+
+  /* One run per horizontal span, not one per cell: a filled row is a single
+     rect instead of a few hundred. */
+  for (let y = 0; y < height; y += 1) {
+    let x = 0;
+
+    while (x < width) {
+      if (tops[x] > y) {
+        x += 1;
+        continue;
+      }
+
+      let span = 1;
+      while (x + span < width && tops[x + span] <= y) span += 1;
+
+      runs.push([x, y, span]);
+      x += span;
+    }
+  }
+
+  return runs;
+}
+/* Ordered dither, 4x4. The standard Bayer threshold map: it spreads a choice
+   between two neighbouring tones over a repeating grid rather than deciding
+   it at random, which is why the result reads as a gradient instead of as
+   noise — and why walking it in order reads as an image decoding rather than
+   as cells switching on at random. */
+const BAYER = [
+  [0, 8, 2, 10],
+  [12, 4, 14, 6],
+  [3, 11, 1, 9],
+  [15, 7, 13, 5]
+];
+
+/** One cell of the opening's grid: where it sits, which tone it settles on,
+    and which pass of the dither brings it in. */
+export interface LoadCell {
+  x: number;
+  y: number;
+  /** Index into the caller's tone ramp, light at the top. */
+  tone: number;
+  /** 0–15. Its place in the Bayer order, and so its turn. */
+  level: number;
+}
+
+interface LoadGridOptions {
+  cols: number;
+  rows: number;
+  /** How many tones the gradient steps through, top to bottom. */
+  tones: number;
+}
+
+/** The opening's grid: a dithered vertical ramp, plus the order it arrives in.
+
+    One matrix does both jobs. Read across a row it decides which of two
+    neighbouring tones a cell takes, which is how a gradient is built out of
+    flat colours and nothing else. Read as a sequence it decides which cells
+    land first, which is how an image used to appear on a slow connection.
+    The ramp and the loading are therefore the same structure seen twice, not
+    two effects stacked on each other. */
+export function loadGrid({ cols, rows, tones }: LoadGridOptions): LoadCell[] {
+  const cells: LoadCell[] = [];
+
+  for (let y = 0; y < rows; y += 1) {
+    const position = (y / Math.max(1, rows - 1)) * (tones - 1);
+    const base = Math.min(tones - 2, Math.floor(position));
+    const frac = position - base;
+
+    for (let x = 0; x < cols; x += 1) {
+      const level = BAYER[y % 4][x % 4];
+      const threshold = (level + 0.5) / 16;
+
+      cells.push({
+        x,
+        y,
+        tone: base + (frac > threshold ? 1 : 0),
+        level
+      });
+    }
+  }
+
+  return cells;
+}

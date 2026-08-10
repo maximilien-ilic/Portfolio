@@ -83,3 +83,16 @@ export const BOAT = [
   row(['.', 9], ['h', 8], ['.', 9]),
   row(['.', 9], ['d', 9], ['.', 8])
 ];
+
+/* A gull, far enough away to be two strokes. It is the only thing on the
+   page allowed to be this small — anything smaller stops being a shape and
+   starts being noise on the grid. */
+
+export const BIRD_PALETTE: Record<string, string> = {
+  b: '#04162c'
+};
+
+export const BIRD = [
+  row(['.', 1], ['b', 1], ['.', 1], ['b', 1], ['.', 1]),
+  row(['b', 1], ['.', 3], ['b', 1])
+];

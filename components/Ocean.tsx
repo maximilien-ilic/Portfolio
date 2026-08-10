@@ -49,8 +49,11 @@ function FoamTrack({
         {/* One tile, drawn once and stamped out — five copies of a few
             hundred rects would be five hundred nodes for nothing. */}
         <g id={id}>
-          {runs.map(([x, y, w]) => (
-            <rect key={`${x}-${y}`} x={x} y={y} width={w} height={1} />
+          {/* Keyed by position in the run list, not by cell: a connector may
+              legitimately land on a cell a baseline already covers, and two
+              rects sharing a coordinate key is a duplicate to React. */}
+          {runs.map(([x, y, w], index) => (
+            <rect key={index} x={x} y={y} width={w} height={1} />
           ))}
         </g>
       </defs>

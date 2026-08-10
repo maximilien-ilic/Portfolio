@@ -1,5 +1,7 @@
 import PixelSprite from './PixelSprite';
 import {
+  BIRD,
+  BIRD_PALETTE,
   CLOUD_BIG,
   CLOUD_MID,
   CLOUD_PALETTE,
@@ -21,9 +23,33 @@ const SKY = [
   { rows: CLOUD_SMALL, top: '26%', duration: 145, delay: -20, opacity: 0.85 }
 ];
 
+/* Gulls, crossing on the same wind but faster than any cloud — the only
+   thing in the sky small enough to read as alive rather than as weather. */
+const FLOCK = [
+  { top: '20%', duration: 46, delay: -12 },
+  { top: '24%', duration: 46, delay: -9 },
+  { top: '31%', duration: 62, delay: -38 }
+];
+
 export default function Clouds() {
   return (
     <div className={styles.sky} aria-hidden="true">
+      <div className={styles.flock}>
+        {FLOCK.map((bird, index) => (
+          <PixelSprite
+            key={index}
+            rows={BIRD}
+            palette={BIRD_PALETTE}
+            className={styles.bird}
+            style={{
+              top: bird.top,
+              animationDuration: `${bird.duration}s`,
+              animationDelay: `${bird.delay}s`
+            }}
+          />
+        ))}
+      </div>
+
       {SKY.map((cloud, index) => (
         <PixelSprite
           key={index}

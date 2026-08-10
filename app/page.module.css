@@ -84,15 +84,61 @@
   text-decoration-color: var(--ink);
 }
 
+/* --- The cascade ----------------------------------------------------- */
+
+/* The hero arrives in order rather than all at once: where he is, who he is,
+   what he does, how to reach him. One orchestrated moment, keyed to the night
+   lifting — not an entrance repeated on every section down the page.
+
+   Nothing is hidden by default. The animation exists only once the stage is
+   marked ready, so a visitor whose JavaScript never runs reads a complete
+   hero that simply never moved. */
+@keyframes surface {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--px) * 3));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:global([data-stage='ready']) .coords,
+:global([data-stage='ready']) .name,
+:global([data-stage='ready']) .role,
+:global([data-stage='ready']) .intro,
+:global([data-stage='ready']) .contact {
+  animation: surface 620ms var(--ease) backwards;
+}
+
+:global([data-stage='ready']) .name {
+  animation-delay: 90ms;
+}
+
+:global([data-stage='ready']) .role {
+  animation-delay: 220ms;
+}
+
+:global([data-stage='ready']) .intro {
+  animation-delay: 320ms;
+}
+
+:global([data-stage='ready']) .contact {
+  animation-delay: 430ms;
+}
+
 /* --- Work ---------------------------------------------------------- */
 
 .work {
+  /* Open water. The zones below carry the rest of the descent. */
   background: var(--ground);
 }
 
 .workInner {
-  /* The ocean's last band already opens the section, so the top is tight. */
-  padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(4rem, 9vw, 7rem);
+  /* The ocean's last band already opens the section, so the top is tight.
+     The bottom is the first zone's edge, so there is no padding to add. */
+  padding-block: clamp(1.5rem, 3vw, 2.5rem) 0;
 }
 
 .workHead {
@@ -120,6 +166,27 @@
   flex: 1;
   height: 2px;
   background: var(--sea);
+}
+
+/* --- Depth zones ---------------------------------------------------- */
+
+/* Each zone is one flat step deeper, opened by the same hard ink edge the
+   ocean bands use — so the descent reads as more water, not as a new
+   section of a document. */
+.zone {
+  border-top: var(--edge) solid var(--ink);
+}
+
+.zoneInner {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+.kelp {
+  background: var(--zone-kelp);
+}
+
+.abyss {
+  background: var(--zone-abyss);
 }
 
 .grid {

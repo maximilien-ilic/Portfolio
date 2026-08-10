@@ -1,0 +1,125 @@
+/* The seabed opens its zone: a lit crest sitting back, the zone's own floor
+   in front of it. Heights are multiples of --px, so every edge lands on the
+   pixel grid.
+
+   Two nested elements per ridge, because both the wind and the camera animate
+   transform and one element cannot run two of them:
+     .layer  the camera — vertical parallax, driven by scroll
+     .ridge  the wind   — horizontal drift, running on its own clock
+   Both stay on the compositor. */
+
+.seabed {
+  position: relative;
+  height: calc(var(--px) * 15);
+  overflow: hidden;
+  user-select: none;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+.ridge {
+  position: absolute;
+  bottom: 0;
+  /* Parked one tile to the left, so travelling one tile to the right never
+     exposes the end of the track. */
+  left: calc(var(--px) * -160);
+  /* The track is deliberately far wider than its parent. Without this the
+     global svg max-width squeezes eight tiles into one viewport and every
+     cell stops being square. */
+  max-width: none;
+  will-change: transform;
+}
+
+/* --- Wind ----------------------------------------------------------- */
+
+/* Everything on the page drifts the same way, left to right. The crest sits
+   further away, so it travels slower. */
+@keyframes seabedDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(var(--px) * 160), 0, 0);
+  }
+}
+
+.crest .ridge {
+  animation: seabedDrift 220s linear infinite;
+}
+
+.floor .ridge {
+  animation: seabedDrift 160s linear infinite;
+}
+
+/* --- Camera ---------------------------------------------------------- */
+
+/* Depth read as differential motion: crossing a zone lifts the crest behind
+   while the floor in front settles, the way the DS camera pulls a route's
+   layers apart as it travels. The floor paints over the crest, so the crest
+   never opens a gap — it only ever slides behind the ledge in front of it.
+
+   Scroll-driven, so it costs no JavaScript and stays on the compositor.
+   Browsers without view() timelines get the floor, standing still. */
+@keyframes cameraCrest {
+  from {
+    transform: translate3d(0, calc(var(--px) * 3), 0);
+  }
+  to {
+    transform: translate3d(0, calc(var(--px) * -3), 0);
+  }
+}
+
+@keyframes cameraFloor {
+  from {
+    transform: translate3d(0, calc(var(--px) * -1), 0);
+  }
+  to {
+    transform: translate3d(0, calc(var(--px) * 1), 0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .crest {
+      animation: cameraCrest linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+
+    .floor {
+      animation: cameraFloor linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+
+/* --- Tone ------------------------------------------------------------ */
+
+/* The floor is the zone's own colour, so it merges into the body of the zone
+   and the descent has no seam. Only the crest reads as a separate ledge. */
+.kelp .crest .ridge {
+  fill: var(--zone-kelp-crest);
+}
+
+.kelp .floor .ridge {
+  fill: var(--zone-kelp);
+}
+
+.abyss .crest .ridge {
+  fill: var(--zone-abyss-crest);
+}
+
+.abyss .floor .ridge {
+  fill: var(--zone-abyss);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The floor keeps its shape, it just stops moving. */
+  .ridge {
+    animation: none;
+  }
+}

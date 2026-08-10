@@ -43,6 +43,19 @@ Sampled from the reference frames, not invented.
 | `--gold`      | `#F4C542` | The interactive accent underwater — hover, focus, the stack count, the email button. |
 | `--sail`      | `#E4573C` | Appears **once**, in the sail of the boat. Never in chrome. |
 
+Below the horizon the descent passes through zones rather than holding one
+navy for every screen. Each is a flat step with a hard ink edge — never a
+fade. Cards keep `--plate` on every zone, the way a game's textbox stays put
+while the route around it changes, so every measured card ratio above still
+holds wherever a card lands.
+
+| Token                | Hex       | Role                                                        |
+|----------------------|-----------|-------------------------------------------------------------|
+| `--zone-kelp`        | `#06382E` | First zone below open water. Foam 11.90:1, mist 7.03:1, gold 8.01:1. |
+| `--zone-abyss`       | `#171A47` | The deep, last zone before the trench. Foam 15.05:1, mist 8.90:1, gold 10.13:1. |
+| `--zone-kelp-crest`  | `#0D5A42` | The lit ledge behind the kelp floor. **Fill only**, like `--sea`. |
+| `--zone-abyss-crest` | `#2A2D6B` | The lit ledge behind the abyss floor. **Fill only**. |
+
 Tag chips are toned by what kind of technology they are, so the same colour
 always means the same category: `--t-lang` gold, `--t-data` cyan,
 `--t-platform` grass, `--t-craft` sand.
@@ -90,3 +103,114 @@ pixel grid. `.foam` sets `max-width: none` for exactly that reason.
 Everything else stays quiet. Cards are cel plates: 3px ink outline and a hard
 offset shadow in `--sea`, zero blur — that offset *is* the shadow the boat
 casts on the water in the reference frame.
+
+## The arrival
+
+The screen starts black and fills in cell by cell, holds for a beat, then
+empties the same way — the same cells, the same order, switching off instead
+of on. One mechanism run twice, so the exit is the entrance played out rather
+than a second effect bolted on.
+
+It has **no skip control and cannot be dismissed**. That is the site owner's
+call, made against advice, and it moves the entire safety margin onto length:
+the whole thing runs in a little over a second, it plays once per visitor, and
+reduced motion never sees a frame of it. The head script in `layout.tsx` marks
+that run and every returning visit before first paint. The page's own
+`Skip to projects` link is untouched and is not related to this.
+
+It is not a loading bar and never claims to measure anything — the site is
+prerendered and there is nothing to wait for.
+
+**One matrix does both jobs.** A 4×4 Bayer threshold map (`loadGrid` in
+`lib/pixel.ts`) is read two ways at once. Across a row it decides which of two
+neighbouring tones a cell takes, which is how the gradient is built out of
+flat colours and nothing else — five sky steps top to bottom, `--sky-low`,
+`--sky-step-2`, `--sky`, `--sky-step-4`, `--sky-high`, with no fade anywhere.
+Read as a sequence, the same sixteen positions decide which cells land first,
+which is how an image used to appear over a slow connection. The ramp and the
+loading are therefore the same structure seen twice, not two effects stacked
+on each other.
+
+Every change is a cut. A cell is `--ink`, or it is its tone, or it is gone;
+the two keyframe stops sit a hundredth of the run apart so the change reads as
+a step rather than a blend.
+
+The grid is drawn at half the render resolution — 32×18 cells of two viewBox
+units each — because a loading cell wants to be seen arriving. The viewBox is
+**sliced, not stretched**, which is what keeps a cell square at any window
+shape; a stretched cell is a dead pixel grid, and at full-viewport scale it is
+the first thing that would give the whole thing away.
+
+**It fills differently every launch.** Bayer decides *which tone* a cell
+settles on and nothing else; the *order* cells arrive in is a fresh shuffle
+each time, and the order they leave in is a second, unrelated one — so the
+exit is never a replay of the entrance. Measured across two seeds, 575 of 576
+cells take a different turn, and the correlation between a cell's arrival and
+its departure is 0.02.
+
+Timing is split rather than woven: every cell has landed by `FILL`, the
+picture holds for `HOLD`, and every cell has gone by `CLEAR`. Each cell
+therefore carries two independent `animation-delay` values, one per animation,
+and no cell can leave before it has arrived.
+
+The seed is drawn after mount, not at module scope, because this page is
+prerendered once at build time: anything random decided during render would be
+baked into the HTML and then disagree with what the client produced. For one
+frame there is therefore no grid, and the container's flat `--ink` stands in —
+exactly what the first frame would have shown anyway.
+
+Discrete stages are the reason this borrowing works at all: a crack that grows
+by stepping is the same grammar as an ocean that changes by stepping. Each
+stage appears whole or not at all — never a fade.
+
+The viewBox is **sliced, not stretched** (`preserveAspectRatio="xMidYMid
+slice"`). That is what keeps a cell square at any window shape; a stretched
+cell is a dead pixel grid, and at full-viewport scale it is the first thing
+that would give the whole thing away.
+
+The hero's cascade keys off the wall shattering, not off a fixed delay, so
+dismissing it at 300ms starts the copy at 300ms. Nothing in the hero is hidden
+by default — with no animation applied at all, every line computes to full
+opacity, so a visitor whose JavaScript never runs reads a complete hero that
+simply never moved.
+
+## The descent
+
+Second reference, kept as strictly apart as the first two: **Pokémon Black and
+White on DS** — a route that changes biome as you walk it, and a camera that
+pulls the layers apart as it travels.
+
+It lands in three places and nowhere else.
+
+**Zones.** Projects are dealt into zones a pair at a time (`page.tsx`), so
+scrolling the work section reads as going deeper instead of as one long navy
+field. Tones cycle, so a fifth project opens the next zone with nobody
+touching a list. The zone grounds stay disciplined — four flat steps, ink
+edges — because the colour belongs to what is *drawn*, not to what is behind
+it. That is how the DS worked too: a limited background palette, colourful
+sprites.
+
+**The seabed.** Each zone opens on a floor (`Seabed.tsx`), generated the same
+way the sea is: a seeded walk that holds a heading for several cells at a time,
+so the silhouette comes out as ledges and slopes rather than as noise, and the
+tail is steered back to its starting height so the tile repeats without a
+seam (`terrain` in `lib/pixel.ts`). Two ridges — a lit crest sitting back, the
+zone's own floor in front. The front ridge is the zone colour, so it merges
+into the body of the zone and the descent has no seam; only the crest reads as
+a separate ledge.
+
+**The camera.** Depth is read as differential motion: crossing a zone lifts
+the crest while the floor settles. It is scroll-driven CSS
+(`animation-timeline: view()`), so it costs no JavaScript and stays on the
+compositor. The floor paints over the crest, so the crest can never open a
+gap — it only slides behind the ledge in front of it.
+
+Each ridge is two nested elements, and that is not incidental: the wind and
+the camera both animate `transform`, and one element cannot run two of them
+without the later one winning. `.layer` carries the camera, `.ridge` inside it
+carries the wind. Both keep the one wind direction the rest of the page
+obeys — left to right, crest slower than floor because it is further away.
+
+Browsers without `view()` timelines get the floor standing still, which is a
+complete picture rather than a broken one. Reduced motion stops the wind and
+never starts the camera.

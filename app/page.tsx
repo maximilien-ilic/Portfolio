@@ -1,6 +1,8 @@
 import Clouds from '@/components/Clouds';
+import Opening from '@/components/Opening';
 import Ocean from '@/components/Ocean';
 import ProjectCard from '@/components/ProjectCard';
+import Seabed from '@/components/Seabed';
 import SiteFooter from '@/components/SiteFooter';
 import SiteNav from '@/components/SiteNav';
 import { projects } from '@/data/projects';
@@ -15,9 +17,27 @@ import {
 } from '@/data/site';
 import styles from './page.module.css';
 
+/* The descent. Projects are dealt into zones a pair at a time, so scrolling
+   the work section reads as going deeper instead of as one long navy field.
+   The tones cycle, so a fifth project opens the next zone without anyone
+   having to touch this list. */
+const ZONE_TONES = ['kelp', 'abyss'] as const;
+const PER_ZONE = 2;
+
+function inPairs<T>(items: readonly T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    out.push(items.slice(i, i + size));
+  }
+  return out;
+}
+
 export default function Home() {
+  const zones = inPairs(projects, PER_ZONE);
+
   return (
     <>
+      <Opening />
       <SiteNav />
 
       <main id="top">
@@ -70,13 +90,25 @@ export default function Home() {
                 {String(projects.length).padStart(2, '0')} charted
               </p>
             </div>
-
-            <div className={styles.grid}>
-              {projects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
           </div>
+
+          {zones.map((zone, index) => {
+            const tone = ZONE_TONES[index % ZONE_TONES.length];
+
+            return (
+              <div key={zone[0].id} className={`${styles.zone} ${styles[tone]}`}>
+                <Seabed tone={tone} />
+
+                <div className={`shell ${styles.zoneInner}`}>
+                  <div className={styles.grid}>
+                    {zone.map((project) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </section>
       </main>
 
