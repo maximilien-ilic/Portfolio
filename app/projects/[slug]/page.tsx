@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { projects } from '@/data/projects';
 import styles from './ProjectDetail.module.css';
+import { GitHubActivityGrid } from '@/components/GitHubActivityGrid';
+import { getRepoActivity, parseRepo } from '@/utils/github';
 
 interface PageProps {
   params: Promise<{
@@ -16,6 +18,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   if (!project) {
     notFound();
   }
+
+  const repo = project.links?.map((l) => parseRepo(l.url)).find(Boolean);
+  const activity = repo ? await getRepoActivity(repo) : null;
 
   return (
     <div className={styles.container}>
@@ -72,6 +77,17 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 {link.label}
               </a>
             ))}
+          </div>
+        )}
+
+        {activity && (
+          <div className={styles.activitySection}>
+            <h3 className={styles.sectionTitle}>Activity</h3>
+            <GitHubActivityGrid
+              days={activity}
+              label="commits in the last year"
+              unit={['commit', 'commits']}
+            />
           </div>
         )}
       </div>

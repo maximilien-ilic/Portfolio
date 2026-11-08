@@ -5,8 +5,12 @@ import { projects } from '@/data/projects';
 import Footer from '@/components/Footer';
 import styles from './page.module.css'
 import Navbar from '@/components/Navbar';
+import { GitHubActivityGrid } from '@/components/GitHubActivityGrid';
+import { getUserContributions } from '@/utils/github';
 
-export default function Home() {
+export default async function Home() {
+  const contributions = await getUserContributions('maximilien-ilic');
+
   return (
     <>
     <Navbar />
@@ -40,6 +44,10 @@ export default function Home() {
               <a href="mailto:maximilien.ilic@gmail.com">maximilien.ilic@gmail.com</a>
             </div>
           </div>
+
+          {contributions && (
+            <GitHubActivityGrid days={contributions} className={styles.activity} />
+          )}
         </header>
       </div>
       <div id="projects">

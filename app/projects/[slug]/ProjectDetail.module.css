@@ -124,6 +124,10 @@
   gap: 1rem;
 }
 
+.activitySection {
+  margin-top: 3rem;
+}
+
 .link {
   display: inline-flex;
   align-items: center;
