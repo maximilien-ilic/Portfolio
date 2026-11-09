@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Maximilien Ilic — Fullstack developer & cybersecurity student',
+  title: 'Maximilien Ilic',
   description:
     'Portfolio of Maximilien Ilic, fullstack developer and cybersecurity student at IIM Digital School.'
 };
