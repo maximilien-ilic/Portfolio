@@ -1,0 +1,198 @@
+/* A dark slab over the bright streaks: the data needs a calm surface, and
+   the contrast with the field around it is what makes it read as an object
+   rather than another layer of colour. */
+.panel {
+  margin-top: clamp(56px, 8vw, 96px);
+  padding: clamp(22px, 3.5vw, 40px);
+  background: #111113;
+  color: #fff;
+  border-radius: 24px;
+  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.55);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 28px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1;
+}
+
+.handle {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: #c3c2b7;
+  text-decoration: none;
+}
+
+.handle:hover {
+  color: #fff;
+}
+
+/* ------------------------------------------------------------ tiles */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid #2a2a2e;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 20px 20px 22px 0;
+}
+
+.tile + .tile {
+  padding-left: 20px;
+  border-left: 1px solid #2a2a2e;
+}
+
+.value {
+  font-family: var(--font-serif);
+  font-size: clamp(44px, 6vw, 72px);
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 1.35;
+  color: #c3c2b7;
+  max-width: 18ch;
+}
+
+@media (max-width: 760px) {
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tile:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .tile:nth-child(n + 3) {
+    border-top: 1px solid #2a2a2e;
+  }
+}
+
+/* ------------------------------------------------------------ blocks */
+
+.block {
+  margin-top: 28px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 8px 48px;
+}
+
+@media (max-width: 760px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.subtitle {
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c3c2b7;
+}
+
+/* Stacked bar: segments separated by a 2px gap of panel colour. */
+.bar {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+}
+
+.bar span {
+  flex-basis: 0;
+}
+
+.bar span:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.bar span:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+  list-style: none;
+  font-size: 14px;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #8e8f95;
+}
+
+.recent {
+  list-style: none;
+}
+
+.recent li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid #2a2a2e;
+}
+
+.recent li:last-child {
+  border-bottom: 1px solid #2a2a2e;
+}
+
+.recent a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.recent a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.meta {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #8e8f95;
+}

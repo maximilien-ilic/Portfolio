@@ -52,3 +52,6 @@ next-env.d.ts
 # certificates
 certificates
 >>>>>>> dev
+
+# python
+__pycache__/

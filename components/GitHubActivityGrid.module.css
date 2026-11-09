@@ -1,0 +1,164 @@
+/* Sits inside a dark surface (#111113). Sequential encoding: one hue (blue),
+   dark → light for few → many, so the empty days recede into the panel. */
+.card {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  color: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.total {
+  font-size: 14px;
+  color: #c3c2b7;
+}
+
+.count {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: #fff;
+  margin-right: 6px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #8e8f95;
+}
+
+.legend span:first-child {
+  margin-right: 4px;
+}
+
+.legend span:last-child {
+  margin-left: 4px;
+}
+
+.swatch {
+  display: block;
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+}
+
+.viewport {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 2px;
+}
+
+.months {
+  position: relative;
+  height: 16px;
+}
+
+.month {
+  position: absolute;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  color: #8e8f95;
+}
+
+.body {
+  display: flex;
+}
+
+.weekdays {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+}
+
+.weekday {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  color: #8e8f95;
+}
+
+.weeks,
+.week {
+  display: flex;
+}
+
+.week {
+  flex-direction: column;
+}
+
+.cell {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  cursor: default;
+}
+
+.cell:hover {
+  outline: 1.5px solid #fff;
+  outline-offset: 1px;
+}
+
+.cell:focus-visible {
+  outline: 2px solid #ffd43b;
+  outline-offset: 1px;
+}
+
+.l0 {
+  background: #1f1f23;
+}
+
+.l1 {
+  background: #184f95;
+}
+
+.l2 {
+  background: #2a78d6;
+}
+
+.l3 {
+  background: #5598e7;
+}
+
+.l4 {
+  background: #9ec5f4;
+}
+
+.tooltip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  padding: 5px 9px;
+  font-size: 12px;
+  background: #fff;
+  color: #0b0b0c;
+  border-radius: 8px;
+  box-shadow: 0 8px 22px -8px rgb(0 0 0 / 0.5);
+}
+
+.tooltip strong {
+  font-weight: 600;
+}
+
+.date {
+  margin-left: 6px;
+  color: #52514e;
+}

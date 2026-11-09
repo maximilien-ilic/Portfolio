@@ -1,26 +1,130 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-serif: var(--font-instrument), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #ededed;
-  }
+html {
+  /* Shows only on overscroll; the page itself is drawn by the colour field. */
+  background: #050507;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* No visible scrollbar: the page still scrolls (wheel, touch, keyboard,
+     the pill nav), the bar just doesn't cut into the colour field. */
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
-  background: var(--background); 
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid #ffd43b;
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #ffd43b;
+  color: #0b0b0c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------- scroll reveal */
+
+/* Blocks come in as they scroll into view, once (see RevealObserver).
+   Only active under .reveal-on, which the layout's inline script adds when
+   motion is allowed. Motion uses the individual translate / scale
+   properties, so it never fights a component's own transform (card
+   hovers keep working). --d staggers siblings. */
+
+.reveal-on [data-reveal] {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 0.9s var(--ease-out) var(--d, 0s),
+    translate 1s var(--ease-out) var(--d, 0s),
+    scale 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0s),
+    filter 0.9s var(--ease-out) var(--d, 0s),
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease;
+}
+
+.reveal-on [data-reveal='up']:not([data-shown]) {
+  opacity: 0;
+  translate: 0 56px;
+  filter: blur(8px);
+}
+
+.reveal-on [data-reveal='pop']:not([data-shown]) {
+  opacity: 0;
+  scale: 0.6;
+}
+
+/* The statements' black strips are drawn like a highlighter: each line's
+   strip grows left to right, then the words come up on it. (Animating the
+   strip's background-size rather than clipping the heading keeps it
+   visible to the IntersectionObserver, which ignores clipped elements.) */
+.reveal-on [data-reveal='wipe'] > span {
+  transition:
+    background-size 1s cubic-bezier(0.77, 0, 0.18, 1) var(--d, 0s),
+    color 0.5s ease calc(var(--d, 0s) + 0.55s);
+}
+
+.reveal-on [data-reveal='wipe'] > span em {
+  transition: opacity 0.5s ease calc(var(--d, 0s) + 0.6s);
+}
+
+.reveal-on [data-reveal='wipe']:not([data-shown]) > span {
+  background-size: 0% 100%;
+  color: transparent;
+}
+
+.reveal-on [data-reveal='wipe']:not([data-shown]) > span em {
+  opacity: 0;
 }

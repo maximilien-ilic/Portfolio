@@ -2,11 +2,13 @@
 
 import * as React from "react";
 import { motion, useSpring, useMotionValue, useReducedMotion } from "motion/react";
-import { cn } from "@/utils/utils";
+import styles from "./GitHubActivityGrid.module.css";
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/*  Types                                                                     */
-/* ────────────────────────────────────────────────────────────────────────── */
+/* Adapted from Wensity's GitHub-Style Activity Grid
+   (https://ui.wensity.com/components/github-activity-grid): one tooltip
+   shared by every day, sprung between cells, and a reveal that runs
+   backwards from today. Cells snap to whole-pixel sizes so they stay crisp
+   at any width. */
 
 export interface ActivityDay {
   /** ISO date string (YYYY-MM-DD). */
@@ -26,60 +28,48 @@ export interface GitHubActivityGridProps {
    * `days` (so colors are always relative to the dataset).
    */
   maxCount?: number;
-  /** Cell size in px. Default 11. */
+  /** Cell size in px. Default 12. */
   cellSize?: number;
-  /** Gap between cells in px. Default 3. */
+  /** Gap between cells in px. Default 4. */
   cellGap?: number;
-  /** Text shown after the total. Default "contributions in the last year". */
+  /** Text shown after the total. Default "contributions in the last year";
+      an empty string hides the total line. */
   label?: string;
   /** Singular / plural unit used in the tooltip and aria labels. */
   unit?: [singular: string, plural: string];
   className?: string;
 }
 
-// Contribution-density buckets, tinted with the site accent (#cd1153).
-const LEVEL_BG = [
-  "bg-white/[0.04]",
-  "bg-[#cd1153]/25",
-  "bg-[#cd1153]/50",
-  "bg-[#cd1153]/75",
-  "bg-[#cd1153]",
-] as const;
+const LEVEL_CLASS = [styles.l0, styles.l1, styles.l2, styles.l3, styles.l4] as const;
 
 const WEEKDAYS = ["", "Mon", "", "Wed", "", "Fri", ""] as const;
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const ACTIVITY_MATTE_NOISE = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.65 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")`;
-const WEEKDAY_LABEL_WIDTH = 22;
+const WEEKDAY_LABEL_WIDTH = 28;
 const WEEKDAY_LABEL_GAP = 4;
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/*  Component                                                                 */
-/* ────────────────────────────────────────────────────────────────────────── */
+/** The largest whole-pixel cell (and matching gap) that fits the width.
+    Fractional cells would blur, so the grid steps down a pixel at a time
+    instead of scaling. */
+function fitCells(weeks: number, available: number, cellSize: number, cellGap: number) {
+  for (let cell = cellSize; cell > 3; cell -= 1) {
+    const gap = cell >= 10 ? cellGap : cell >= 6 ? 2 : 1;
+    if (weeks * cell + (weeks - 1) * gap <= available) return { cell, gap };
+  }
+  return { cell: 3, gap: 1 };
+}
 
 export function GitHubActivityGrid({
   days,
   maxCount,
-  cellSize = 11,
-  cellGap = 3,
+  cellSize = 12,
+  cellGap = 4,
   label = "contributions in the last year",
   unit = ["contribution", "contributions"],
   className,
 }: GitHubActivityGridProps) {
   const reduce = useReducedMotion();
+
   /* ---------------- bucketise into 0..4 levels --------------------------- */
   const max = React.useMemo(() => {
     if (typeof maxCount === "number" && maxCount > 0) return maxCount;
@@ -155,17 +145,14 @@ export function GitHubActivityGrid({
     return () => observer.disconnect();
   }, []);
 
-  function onCellEnter(
-    e: React.PointerEvent<HTMLButtonElement>,
-    day: ActivityDay
-  ) {
+  function pointAt(target: HTMLElement, day: ActivityDay) {
     const cont = containerRef.current;
     if (!cont) return;
-    const r = e.currentTarget.getBoundingClientRect();
+    const r = target.getBoundingClientRect();
     const cr = cont.getBoundingClientRect();
     // Center-top of the cell, relative to container
     tooltipX.set(r.left - cr.left + r.width / 2);
-    tooltipY.set(r.top - cr.top - 6);
+    tooltipY.set(r.top - cr.top - 8);
     setHover(day);
   }
   function onLeave() {
@@ -177,165 +164,99 @@ export function GitHubActivityGrid({
     [days]
   );
   const weekCount = grid.weeks.length;
-  const baseGridWidth =
-    weekCount * cellSize + Math.max(0, weekCount - 1) * cellGap;
-  const availableGridWidth = Math.max(
-    0,
-    gridViewportWidth - WEEKDAY_LABEL_WIDTH - WEEKDAY_LABEL_GAP
-  );
-  const fitScale =
-    gridViewportWidth > 0 && baseGridWidth > availableGridWidth
-      ? availableGridWidth / baseGridWidth
-      : 1;
-  const fittedCellSize = cellSize * fitScale;
-  const fittedCellGap = cellGap * fitScale;
-  const fittedGridWidth =
-    weekCount * fittedCellSize + Math.max(0, weekCount - 1) * fittedCellGap;
+  const available = Math.max(0, gridViewportWidth - WEEKDAY_LABEL_WIDTH - WEEKDAY_LABEL_GAP);
+  const { cell, gap } =
+    gridViewportWidth > 0
+      ? fitCells(weekCount, available, cellSize, cellGap)
+      : { cell: cellSize, gap: cellGap };
+  const gridWidth = weekCount * cell + Math.max(0, weekCount - 1) * gap;
+  // Empty cells before the first day; used to turn a grid position back
+  // into an index in `days`.
+  const startPad = grid.weeks[0]?.findIndex(Boolean) ?? 0;
 
   return (
     <div
-      className={cn(
-        "relative isolate w-full overflow-hidden border border-white/10 bg-black p-5 font-['Courier_New',monospace] text-white",
-        className
-      )}
+      className={`${styles.card} ${className ?? ""}`}
       ref={containerRef}
       onPointerLeave={onLeave}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.055] mix-blend-overlay"
-        style={{ backgroundImage: ACTIVITY_MATTE_NOISE, backgroundSize: "240px 240px" }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.12)_0%,transparent_28%,transparent_72%,rgba(0,0,0,0.22)_100%)]"
-      />
-
       {/* Header */}
-      <div className="relative z-10 mb-3 flex items-end justify-between">
-        <div>
-          <div className="text-[15px] font-semibold tracking-tight text-white">
-            <span className="tabular-nums">{totalContributions.toLocaleString()}</span>
-            <span className="ml-1 font-normal text-neutral-400">
-              {label}
-            </span>
-          </div>
-        </div>
+      <div className={styles.header}>
+        {label ? (
+          <p className={styles.total}>
+            <span className={styles.count}>{totalContributions.toLocaleString("en")}</span> {label}
+          </p>
+        ) : (
+          <span />
+        )}
         <Legend />
       </div>
 
       {/* Grid */}
-      <div ref={gridViewportRef} className="relative z-10 overflow-hidden pb-1">
-        <div className="flex min-w-0 flex-col">
-          {/* Month labels row */}
+      <div ref={gridViewportRef} className={styles.viewport}>
+        <div
+          className={styles.months}
+          style={{ width: gridWidth, marginLeft: WEEKDAY_LABEL_WIDTH + WEEKDAY_LABEL_GAP }}
+        >
+          {grid.monthLabels.map((m) => (
+            <span
+              key={`${m.col}-${m.label}`}
+              className={styles.month}
+              style={{ left: m.col * (cell + gap) }}
+            >
+              {m.label}
+            </span>
+          ))}
+        </div>
+
+        <div className={styles.body}>
+          {/* Weekday labels */}
           <div
-            className="relative ml-7 h-3"
-            style={{
-              width: fittedGridWidth,
-            }}
+            className={styles.weekdays}
+            style={{ gap, width: WEEKDAY_LABEL_WIDTH, marginRight: WEEKDAY_LABEL_GAP }}
           >
-            {grid.monthLabels.map((m) => (
-              <span
-                key={`${m.col}-${m.label}`}
-                className="absolute top-0 text-[9.5px] font-medium uppercase tracking-[0.06em] text-neutral-400"
-                style={{ left: m.col * (fittedCellSize + fittedCellGap) }}
-              >
-                {m.label}
+            {WEEKDAYS.map((wd, i) => (
+              <span key={i} className={styles.weekday} style={{ height: cell }}>
+                {wd}
               </span>
             ))}
           </div>
 
-          <div className="flex">
-            {/* Weekday labels */}
-            <div
-              className="mr-1 flex flex-col"
-              style={{ gap: fittedCellGap }}
-            >
-              {WEEKDAYS.map((wd, i) => (
-                <span
-                  key={i}
-                  className="flex items-center text-[9.5px] font-medium tracking-tight text-neutral-400"
-                  style={{ height: fittedCellSize, width: WEEKDAY_LABEL_WIDTH }}
-                >
-                  {wd}
-                </span>
-              ))}
-            </div>
-
-            {/* Cells */}
-            <div className="flex" style={{ gap: fittedCellGap }}>
-              {grid.weeks.map((week, wIdx) => (
-                <div
-                  key={wIdx}
-                  className="flex flex-col"
-                  style={{ gap: fittedCellGap }}
-                >
-                  {week.map((day, dIdx) => {
-                    if (!day) {
-                      return (
-                        <span
-                          key={`pad-${wIdx}-${dIdx}`}
-                          style={{
-                            width: fittedCellSize,
-                            height: fittedCellSize,
-                          }}
-                        />
-                      );
-                    }
-                    const lvl = level(day.count);
-                    // index back from the end → most recent day first
-                    const fromEnd = days.length - 1 - days.indexOf(day);
-                    const delay = fromEnd * 0.002;
+          {/* Cells */}
+          <div className={styles.weeks} style={{ gap }}>
+            {grid.weeks.map((week, wIdx) => (
+              <div key={wIdx} className={styles.week} style={{ gap }}>
+                {week.map((day, dIdx) => {
+                  if (!day) {
                     return (
-                      <motion.button
-                        key={day.date}
-                        type="button"
-                        initial={reduce ? false : { scale: 0, opacity: 0 }}
-                        animate={reduce ? { scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
-                        transition={
-                          reduce
-                            ? { duration: 0 }
-                            : {
-                                delay,
-                                type: "spring",
-                                stiffness: 420,
-                                damping: 28,
-                                mass: 0.6,
-                              }
-                        }
-                        onPointerEnter={(e) => onCellEnter(e, day)}
-                        onFocus={(e) => {
-                          // Synthesise a pointer-style enter for keyboard nav
-                          const cont = containerRef.current;
-                          if (!cont) return;
-                          const r = (
-                            e.currentTarget as HTMLButtonElement
-                          ).getBoundingClientRect();
-                          const cr = cont.getBoundingClientRect();
-                          tooltipX.set(r.left - cr.left + r.width / 2);
-                          tooltipY.set(r.top - cr.top - 6);
-                          setHover(day);
-                        }}
-                        onBlur={onLeave}
-                        aria-label={`${day.count} ${day.count === 1 ? unit[0] : unit[1]} on ${day.date}`}
-                        className={cn(
-                          "block rounded-[3px] outline-none transition-colors",
-                          "ring-0 focus-visible:ring-2 focus-visible:ring-[#cd1153]/60",
-                          LEVEL_BG[lvl],
-                          lvl === 0 &&
-                            "ring-1 ring-inset ring-white/10"
-                        )}
-                        style={{
-                          width: fittedCellSize,
-                          height: fittedCellSize,
-                          willChange: "transform",
-                        }}
+                      <span
+                        key={`pad-${wIdx}-${dIdx}`}
+                        style={{ width: cell, height: cell }}
                       />
                     );
-                  })}
-                </div>
-              ))}
-            </div>
+                  }
+                  const lvl = level(day.count);
+                  // index back from the end → most recent day first
+                  const fromEnd = days.length - 1 - (wIdx * 7 + dIdx - startPad);
+                  return (
+                    <motion.button
+                      key={day.date}
+                      type="button"
+                      initial={reduce ? false : { opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      // Cells pop in, they don't fade: zero duration, staggered.
+                      transition={{ delay: reduce ? 0 : fromEnd * 0.0025, duration: 0 }}
+                      onPointerEnter={(e) => pointAt(e.currentTarget, day)}
+                      onFocus={(e) => pointAt(e.currentTarget, day)}
+                      onBlur={onLeave}
+                      aria-label={`${day.count} ${day.count === 1 ? unit[0] : unit[1]} on ${day.date}`}
+                      className={`${styles.cell} ${LEVEL_CLASS[lvl]}`}
+                      style={{ width: cell, height: cell }}
+                    />
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -349,22 +270,13 @@ export function GitHubActivityGrid({
           opacity: hover ? 1 : 0,
           translateX: "-50%",
           translateY: "-100%",
-          willChange: "transform",
         }}
-        transition={{ opacity: { duration: 0.12 } }}
-        className={cn(
-          "pointer-events-none absolute left-0 top-0 z-20 select-none rounded-md px-2 py-1 text-[10.5px] font-medium tracking-tight",
-          "border border-white/15 bg-neutral-950 text-white",
-          "shadow-[0_8px_22px_-8px_rgba(0,0,0,.25)]"
-        )}
+        className={styles.tooltip}
       >
         {hover ? (
           <>
-            <span className="tabular-nums">{hover.count}</span>{" "}
-            {hover.count === 1 ? unit[0] : unit[1]}
-            <span className="ml-1.5 text-neutral-400">
-              · {formatDate(hover.date)}
-            </span>
+            <strong>{hover.count}</strong> {hover.count === 1 ? unit[0] : unit[1]}
+            <span className={styles.date}>· {formatDate(hover.date)}</span>
           </>
         ) : null}
       </motion.div>
@@ -372,23 +284,12 @@ export function GitHubActivityGrid({
   );
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/*  Helpers                                                                   */
-/* ────────────────────────────────────────────────────────────────────────── */
-
 function Legend() {
   return (
-    <div className="flex items-center gap-1.5 text-[10px] text-neutral-400">
+    <div className={styles.legend} aria-hidden="true">
       <span>Less</span>
-      {LEVEL_BG.map((bg, i) => (
-        <span
-          key={i}
-          className={cn(
-            "h-[10px] w-[10px] rounded-[3px]",
-            bg,
-            i === 0 && "ring-1 ring-inset ring-white/10"
-          )}
-        />
+      {LEVEL_CLASS.map((cls, i) => (
+        <span key={i} className={`${styles.swatch} ${cls}`} />
       ))}
       <span>More</span>
     </div>
@@ -397,52 +298,9 @@ function Legend() {
 
 function formatDate(iso: string) {
   const d = new Date(iso + "T00:00:00");
-  return d.toLocaleDateString(undefined, {
+  return d.toLocaleDateString("en", {
     weekday: "short",
     month: "short",
     day: "numeric",
   });
-}
-
-/* ────────────────────────────────────────────────────────────────────────── */
-/*  Convenience: deterministic mock generator (handy for previews)            */
-/* ────────────────────────────────────────────────────────────────────────── */
-
-/**
- * Deterministic seeded mock generator. Returns 371 days (53 full weeks)
- * ending on `endDate` (default = today).
- */
-export function mockActivityYear(
-  seed = 42,
-  endDate: Date = new Date()
-): ActivityDay[] {
-  const total = 371;
-  const days: ActivityDay[] = [];
-  let s = seed;
-  function rand() {
-    s = (s * 9301 + 49297) % 233280;
-    return s / 233280;
-  }
-  const end = new Date(endDate);
-  end.setHours(0, 0, 0, 0);
-
-  for (let i = total - 1; i >= 0; i--) {
-    const d = new Date(end);
-    d.setDate(end.getDate() - i);
-    const wd = d.getDay();
-    // weekends quieter, midweek busier
-    const base = wd === 0 || wd === 6 ? 0.18 : 0.55;
-    const r = rand();
-    let count = 0;
-    if (r < 0.35) count = 0;
-    else if (r < 0.6) count = Math.floor(rand() * 3) + 1;
-    else if (r < 0.85) count = Math.floor(rand() * 6) + 3;
-    else count = Math.floor(rand() * 10) + 8;
-    if (rand() > base) count = Math.max(0, count - 2);
-    days.push({
-      date: d.toISOString().slice(0, 10),
-      count,
-    });
-  }
-  return days;
 }

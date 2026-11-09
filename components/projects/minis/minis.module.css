@@ -1,0 +1,867 @@
+/* Shared look for the project miniatures: white ink with a slight hand
+   wobble (the --sketch filter), small mono labels, dark fills where a shape
+   has to stay readable over a bright cover. All motion is transform,
+   opacity or stroke-dashoffset, and stops for reduced motion. */
+
+.stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ink {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: var(--sketch);
+}
+
+.thin {
+  stroke-width: 1;
+  stroke-opacity: 0.8;
+}
+
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 7.5px;
+  fill: #fff;
+  fill-opacity: 0.85;
+}
+
+.dot,
+.dotFill {
+  fill: #fff;
+  stroke: none;
+}
+
+/* Anything that transforms in SVG needs its own box as reference. */
+.diver,
+.bubble,
+.packet,
+.glove,
+.counter,
+.boxerA,
+.boxerB,
+.cardBack,
+.cardFace,
+.warnTag {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* ------------------------------------------------------------ dive log */
+
+/* One 7 s loop: the line draws over 0–62 %, holds, fades out at the end. */
+.loop7 {
+  animation: fade7 7s linear infinite;
+}
+
+@keyframes fade7 {
+  0%,
+  86% {
+    opacity: 1;
+  }
+  96%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.diveLine {
+  stroke-dasharray: 1;
+  animation: draw7 7s linear infinite;
+}
+
+@keyframes draw7 {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  62%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.warnLine {
+  fill: none;
+  stroke: #ff3b2f;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: warn7 7s linear infinite;
+}
+
+@keyframes warn7 {
+  0%,
+  48% {
+    opacity: 0;
+  }
+  50%,
+  86% {
+    opacity: 1;
+  }
+  96%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The diver follows the profile: one keyframe per vertex, timed by the
+   length of each segment so the speed is even. */
+.diver {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  animation: diver7 7s linear infinite;
+}
+
+@keyframes diver7 {
+  0% { transform: translate(40px, 38px); opacity: 1; }
+  18.7% { transform: translate(78px, 150px); }
+  25.3% { transform: translate(120px, 156px); }
+  31.7% { transform: translate(160px, 150px); }
+  36.8% { transform: translate(192px, 155px); }
+  44% { transform: translate(214px, 115px); }
+  52.8% { transform: translate(224px, 60px); }
+  57.9% { transform: translate(256px, 60px); }
+  62% { transform: translate(270px, 38px); opacity: 1; }
+  70%, 100% { transform: translate(270px, 38px); opacity: 0; }
+}
+
+.bubble {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 0.8;
+  animation: bubble 1.4s ease-out infinite;
+}
+
+.b2 {
+  animation-delay: 0.45s;
+}
+
+.b3 {
+  animation-delay: 0.9s;
+}
+
+@keyframes bubble {
+  from {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
+}
+
+.readouts text {
+  fill: #fff;
+}
+
+.warnTag {
+  opacity: 0;
+  animation: warn7 7s linear infinite;
+}
+
+.warnTag rect {
+  fill: #d93a28;
+}
+
+.warnTag text {
+  font-family: var(--font-mono), monospace;
+  font-size: 7.5px;
+  fill: #fff;
+}
+
+/* --------------------------------------------------------- automations */
+
+.node {
+  --cycle: 4s;
+}
+
+.nodeBox {
+  fill: #111113;
+  fill-opacity: 1;
+  stroke: #fff;
+  stroke-width: 1.4;
+  filter: var(--sketch);
+  animation: node-hit var(--cycle) ease-out infinite;
+  /* Arrivals at 0 %, 18 %, 46 %, 74 % of the loop; the second row runs
+     half a loop later. */
+  animation-delay: calc(var(--n) * 1.12s - 0.4s + var(--row) * 2s);
+}
+
+@keyframes node-hit {
+  0% {
+    fill: #ffd43b;
+    fill-opacity: 0.9;
+  }
+  14%,
+  100% {
+    fill: #111113;
+    fill-opacity: 1;
+  }
+}
+
+.alert .nodeBox {
+  animation-name: node-alert;
+}
+
+@keyframes node-alert {
+  0%,
+  40% {
+    fill: #d93a28;
+    fill-opacity: 1;
+  }
+  60%,
+  100% {
+    fill: #111113;
+    fill-opacity: 1;
+  }
+}
+
+.nodeLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  fill: #fff;
+}
+
+.packet {
+  fill: #ffd43b;
+  stroke: #111113;
+  stroke-width: 1;
+  animation: hop4 4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: calc(var(--row) * 2s);
+}
+
+.packetBottom {
+  animation-name: hop3;
+}
+
+@keyframes hop4 {
+  0% { transform: translateX(0); }
+  18%, 28% { transform: translateX(var(--step)); }
+  46%, 56% { transform: translateX(calc(var(--step) * 2)); }
+  74%, 100% { transform: translateX(calc(var(--step) * 3)); }
+}
+
+@keyframes hop3 {
+  0% { transform: translateX(0); }
+  18%, 28% { transform: translateX(var(--step)); }
+  46%, 100% { transform: translateX(calc(var(--step) * 2)); }
+}
+
+/* ------------------------------------------------------------- boxing */
+
+.boxerA {
+  animation: sway 2.4s ease-in-out infinite;
+}
+
+.boxerB {
+  animation: lean 2.4s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(4px, -5px);
+  }
+}
+
+@keyframes lean {
+  0%,
+  22%,
+  100% {
+    transform: translate(0, 0);
+  }
+  30% {
+    transform: translate(7px, 3px);
+  }
+  60% {
+    transform: translate(-2px, 4px);
+  }
+}
+
+.body {
+  fill: #111113;
+}
+
+.glove {
+  stroke: #fff;
+  stroke-width: 1.4;
+  filter: var(--sketch);
+}
+
+.gloveA {
+  fill: #ffd43b;
+}
+
+.gloveB {
+  fill: #ff3b2f;
+}
+
+.jab {
+  animation: jab 2.4s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+}
+
+@keyframes jab {
+  0%,
+  18%,
+  40%,
+  100% {
+    transform: translateX(0);
+  }
+  26% {
+    transform: translateX(16px);
+  }
+}
+
+.counter {
+  animation: counter 2.4s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+}
+
+@keyframes counter {
+  0%,
+  58%,
+  80%,
+  100% {
+    transform: translateX(0);
+  }
+  66% {
+    transform: translateX(-14px);
+  }
+}
+
+.edge {
+  stroke: #fff;
+  stroke-width: 0.8;
+  stroke-opacity: 0.25;
+  animation: pulse 2.4s linear infinite;
+  animation-delay: calc(var(--e) * 0.22s);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    stroke-opacity: 0.25;
+  }
+  8% {
+    stroke-opacity: 1;
+    stroke: #ffd43b;
+  }
+  20% {
+    stroke-opacity: 0.25;
+  }
+}
+
+.neuron {
+  fill: #111113;
+  stroke: #fff;
+  stroke-width: 1.4;
+}
+
+.fire {
+  animation: fire 2.4s linear infinite;
+  animation-delay: calc(var(--e) * 0.22s + 0.1s);
+}
+
+@keyframes fire {
+  0%,
+  100% {
+    fill: #111113;
+  }
+  8% {
+    fill: #ffd43b;
+  }
+  24% {
+    fill: #111113;
+  }
+}
+
+/* -------------------------------------------------------- mineral map */
+
+.classified {
+  opacity: 0;
+  animation: classify 5s linear infinite;
+  animation-delay: calc(var(--c) * 0.12s);
+}
+
+@keyframes classify {
+  0% {
+    opacity: 0;
+  }
+  4%,
+  78% {
+    opacity: 1;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.scan {
+  fill: #fff;
+  animation: scan 5s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  43% {
+    transform: translateX(234px);
+    opacity: 1;
+  }
+  48%,
+  100% {
+    transform: translateX(234px);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------- deck royale */
+
+.cardFill {
+  fill: #111113;
+  fill-opacity: 0.9;
+}
+
+/* Each card: back, flip to face, hold, flip back — staggered by --k. */
+.cardBack {
+  animation: back 5s ease-in-out infinite;
+  animation-delay: calc(var(--k) * 0.14s);
+}
+
+.cardFace {
+  transform: scaleX(0);
+  animation: face 5s ease-in-out infinite;
+  animation-delay: calc(var(--k) * 0.14s);
+}
+
+@keyframes back {
+  0%,
+  8% {
+    transform: scaleX(1);
+  }
+  12%,
+  86% {
+    transform: scaleX(0);
+  }
+  90%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes face {
+  0%,
+  12% {
+    transform: scaleX(0);
+  }
+  16%,
+  82% {
+    transform: scaleX(1);
+  }
+  86%,
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+.elixir {
+  fill: #c03fe0;
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+.cost {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  font-weight: 700;
+  fill: #fff;
+}
+
+.average {
+  opacity: 0;
+  animation: average 5s ease infinite;
+  animation-delay: 1s;
+}
+
+.average rect {
+  fill: #ffd43b;
+}
+
+.average text {
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  fill: #111;
+}
+
+@keyframes average {
+  0%,
+  10% {
+    opacity: 0;
+  }
+  16%,
+  76% {
+    opacity: 1;
+  }
+  84%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------- secure crud */
+
+/* 9 s loop in three beats: SQL injection (blocked), script tag (escaped),
+   a real name (inserted). */
+
+.field {
+  fill: #0b0b0c;
+}
+
+.typed {
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  fill: #fff;
+}
+
+.typeCover {
+  fill: #0b0b0c;
+  animation-duration: 9s;
+  animation-iteration-count: infinite;
+}
+
+.phaseA,
+.phaseB,
+.phaseC {
+  opacity: 0;
+  animation-duration: 9s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.phaseA { animation-name: beatA; }
+.phaseB { animation-name: beatB; }
+.phaseC { animation-name: beatC; }
+
+@keyframes beatA {
+  0%, 31% { opacity: 1; }
+  33%, 100% { opacity: 0; }
+}
+
+@keyframes beatB {
+  0%, 33% { opacity: 0; }
+  34%, 64% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+}
+
+@keyframes beatC {
+  0%, 66% { opacity: 0; }
+  67%, 97% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Typing: the cover slides off the text one character per step. */
+.phaseA .typeCover { animation-name: typeA; }
+.phaseB .typeCover { animation-name: typeB; }
+.phaseC .typeCover { animation-name: typeC; }
+
+@keyframes typeA {
+  0%, 2% { transform: translateX(0); animation-timing-function: steps(11, end); }
+  14%, 100% { transform: translateX(var(--w)); }
+}
+
+@keyframes typeB {
+  0%, 35% { transform: translateX(0); animation-timing-function: steps(16, end); }
+  48%, 100% { transform: translateX(var(--w)); }
+}
+
+@keyframes typeC {
+  0%, 69% { transform: translateX(0); animation-timing-function: steps(7, end); }
+  76%, 100% { transform: translateX(var(--w)); }
+}
+
+.stamp {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation-duration: 9s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.phaseA .stamp { animation-name: stampA; }
+.phaseB .stamp { animation-name: stampB; }
+.phaseC .stamp { animation-name: stampC; }
+
+@keyframes stampA {
+  0%, 16% { transform: scale(0); }
+  19%, 100% { transform: scale(1) rotate(-4deg); }
+}
+
+@keyframes stampB {
+  0%, 50% { transform: scale(0); }
+  53%, 100% { transform: scale(1) rotate(-4deg); }
+}
+
+@keyframes stampC {
+  0%, 78% { transform: scale(0); }
+  81%, 100% { transform: scale(1) rotate(-4deg); }
+}
+
+.stamp text {
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  fill: #fff;
+}
+
+.stampBad rect {
+  fill: #d93a28;
+}
+
+.stampGood rect {
+  fill: #2ba84a;
+}
+
+.tableHead {
+  font-family: var(--font-mono), monospace;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: #fff;
+  fill-opacity: 0.6;
+}
+
+.cell {
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  fill: #fff;
+}
+
+.newRow {
+  opacity: 0;
+  animation: new-row 9s linear infinite;
+}
+
+.newRowFill {
+  fill: #2ba84a;
+  fill-opacity: 0.25;
+}
+
+@keyframes new-row {
+  0%, 80% { opacity: 0; }
+  83%, 96% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ------------------------------------------------------- blender keys */
+
+/* 8 s loop, four key presses, one every 2 s. */
+
+.faint {
+  stroke-width: 0.8;
+  stroke-opacity: 0.25;
+}
+
+.cubeTop {
+  fill: rgb(255 255 255 / 0.06);
+}
+
+.extrude {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transform: scaleY(0);
+  animation: extrude 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes extrude {
+  0%, 50% { transform: scaleY(0); }
+  56%, 94% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+.strike {
+  stroke: #ff3b2f;
+  stroke-width: 2;
+}
+
+.status {
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  fill: #fff;
+  opacity: 0;
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: steps(1);
+}
+
+.msg0 { animation-name: msg0; }
+.msg1 { animation-name: msg1; }
+.msg2 { animation-name: msg2; fill: #8ce99a; }
+.msg3 { animation-name: msg3; }
+
+@keyframes msg0 { 0% { opacity: 1; } 25%, 100% { opacity: 0; } }
+@keyframes msg1 { 0% { opacity: 0; } 25% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes msg2 { 0% { opacity: 0; } 50% { opacity: 1; } 75%, 100% { opacity: 0; } }
+@keyframes msg3 { 0% { opacity: 0; } 75% { opacity: 1; } }
+
+.key {
+  fill: #0b0b0c;
+  stroke: #fff;
+  stroke-width: 1.2;
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+}
+
+.keyLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  fill: #fff;
+}
+
+.keyBrowse .key { animation-name: press-browse; }
+.keyEnter .key { animation-name: press-enter; }
+.keyEsc .key { animation-name: press-esc; }
+
+@keyframes press-browse {
+  0%, 6% { fill: #ffd43b; }
+  9%, 100% { fill: #0b0b0c; }
+}
+
+@keyframes press-enter {
+  0%, 24% { fill: #0b0b0c; }
+  25%, 31% { fill: #ffd43b; }
+  34%, 49% { fill: #0b0b0c; }
+  50%, 56% { fill: #ffd43b; }
+  59%, 100% { fill: #0b0b0c; }
+}
+
+@keyframes press-esc {
+  0%, 74% { fill: #0b0b0c; }
+  75%, 81% { fill: #ffd43b; }
+  84%, 100% { fill: #0b0b0c; }
+}
+
+/* ------------------------------------------------------ child theme */
+
+/* 7 s loop: code appears line by line, then the page is painted. */
+
+.code {
+  font-family: var(--font-mono), monospace;
+  font-size: 7.5px;
+  fill: #fff;
+}
+
+.codeLine {
+  opacity: 0;
+  animation: code-in 7s linear infinite;
+  animation-delay: calc(var(--p) * 0.28s);
+}
+
+@keyframes code-in {
+  0% { opacity: 0; }
+  3%, 86% { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+.page {
+  fill: #f1f3f5;
+}
+
+.wire {
+  fill: none;
+  stroke: #adb5bd;
+  stroke-width: 1.2;
+  stroke-dasharray: 3 2;
+}
+
+.paint {
+  opacity: 0;
+  animation: paint 7s ease infinite;
+  animation-delay: calc(var(--p) * 0.45s + 1.6s);
+}
+
+@keyframes paint {
+  0% { opacity: 0; }
+  6%, 70% { opacity: 1; }
+  78%, 100% { opacity: 0; }
+}
+
+.themeDone {
+  opacity: 0;
+  animation: theme-done 7s ease infinite;
+}
+
+.themeDone rect {
+  fill: #ffd43b;
+}
+
+.themeDone text {
+  font-family: var(--font-mono), monospace;
+  font-size: 7.5px;
+  fill: #111;
+}
+
+@keyframes theme-done {
+  0%, 56% { opacity: 0; }
+  60%, 86% { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+/* ------------------------------------------------------ reduced motion */
+
+/* Every miniature settles on its "finished" frame. */
+@media (prefers-reduced-motion: reduce) {
+  .stage * {
+    animation: none !important;
+  }
+
+  .diveLine {
+    stroke-dashoffset: 0;
+  }
+
+  .warnLine,
+  .warnTag,
+  .classified,
+  .average,
+  .phaseC,
+  .newRow,
+  .msg2,
+  .codeLine,
+  .paint,
+  .themeDone {
+    opacity: 1;
+  }
+
+  .phaseC .typeCover {
+    transform: translateX(var(--w));
+  }
+
+  .stamp,
+  .extrude {
+    transform: none;
+  }
+
+  .diver,
+  .scan {
+    opacity: 0;
+  }
+
+  .cardBack {
+    transform: scaleX(0);
+  }
+
+  .cardFace {
+    transform: scaleX(1);
+  }
+}

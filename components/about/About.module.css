@@ -1,0 +1,114 @@
+/* The about section sits on the same colours as the hero, seen through
+   fluted glass: dark in places, very bright in others. Nothing here relies
+   on the field for contrast — text is set on its own black strips or dark
+   panels, the same label-maker language as the hero's tagline. */
+.about {
+  position: relative;
+  padding: clamp(120px, 16vw, 200px) 20px clamp(80px, 10vw, 140px);
+  color: #fff;
+}
+
+.inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* Same yellow as the hero's bubble. */
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 4px 10px 5px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #ffd43b;
+  color: #111;
+  border-radius: 10px 10px 10px 0;
+}
+
+/* Each line of the statement gets its own black strip: the strips break
+   with the text, so the shape changes with the window width. */
+.statement {
+  max-width: 16ch;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(46px, 8vw, 118px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.strip {
+  background: linear-gradient(#0b0b0c, #0b0b0c) no-repeat 0 0 / 100% 100%;
+  padding: 0 0.16em 0.04em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* The verb that matters gets the hero's red chip colour. */
+.statement em {
+  position: relative;
+  font-style: italic;
+  background: #d93a28;
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+}
+
+/* Dark glass panel for the long text. */
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 36px clamp(32px, 6vw, 96px);
+  margin-top: clamp(40px, 6vw, 72px);
+  padding: clamp(22px, 3.5vw, 40px);
+  background: rgb(11 11 12 / 0.78);
+  border-radius: 24px;
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+}
+
+@media (max-width: 820px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bio {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  font-size: clamp(17px, 1.45vw, 20px);
+  line-height: 1.6;
+  color: #e9e8e2;
+  max-width: 60ch;
+}
+
+.facts {
+  align-self: start;
+  border-top: 1px solid #3a3a3f;
+}
+
+.facts div {
+  display: grid;
+  grid-template-columns: 9em 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #3a3a3f;
+}
+
+.facts dt {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c3c2b7;
+  padding-top: 3px;
+}
+
+.facts dd {
+  font-size: 16px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}

@@ -1,0 +1,172 @@
+/* --u is how many CSS pixels one viewBox unit gets. Both words share it, so
+   the two svgs are always drawn at the same scale. --total (both words plus
+   the gap) and --widest come from the data: on a wide screen the name sits
+   on one line, below 900px it breaks into two. */
+.lettering {
+  --u: min(1.95px, calc((100vw - 96px) / var(--total)));
+  --stroke: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: calc(var(--u) * 14);
+  row-gap: calc(var(--u) * 2);
+  color: #fff;
+  /* A soft dark halo keeps the white line readable when the field behind
+     turns yellow. */
+  filter: drop-shadow(0 0 calc(var(--u) * 5) rgb(0 0 0 / 0.35));
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 900px) {
+  .lettering {
+    --u: calc((100vw - 40px) / var(--widest));
+    --stroke: 2.3;
+  }
+}
+
+@media (max-width: 520px) {
+  .lettering {
+    --stroke: 2.6;
+  }
+}
+
+.word {
+  width: calc(var(--vbw) * var(--u));
+  height: auto;
+  overflow: visible;
+  flex: none;
+}
+
+.frame path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Filled titles: a thin, exact outline is drawn first, then each letter
+   fills in white as soon as it is closed. */
+.fills path {
+  fill: currentColor;
+  transition: opacity 0.3s ease;
+}
+
+.filled .outline path {
+  stroke-width: calc(var(--stroke) * 0.75);
+}
+
+/* While drawing only frame 0 exists. Once drawn, the three frames take
+   turns: 3 × 140 ms, held, never tweened. */
+.frame1,
+.frame2 {
+  visibility: hidden;
+}
+
+.lettering[data-phase='drawn'] .frame0 {
+  animation: boil0 0.42s steps(1) infinite;
+}
+
+.lettering[data-phase='drawn'] .frame1 {
+  animation: boil1 0.42s steps(1) infinite;
+}
+
+.lettering[data-phase='drawn'] .frame2 {
+  animation: boil2 0.42s steps(1) infinite;
+}
+
+@keyframes boil0 {
+  0% { visibility: visible; }
+  33.333% { visibility: hidden; }
+}
+
+@keyframes boil1 {
+  0% { visibility: hidden; }
+  33.333% { visibility: visible; }
+  66.666% { visibility: hidden; }
+}
+
+@keyframes boil2 {
+  0% { visibility: hidden; }
+  66.666% { visibility: visible; }
+}
+
+/* Small stars inside the letters: they pop in one after the other once the
+   letters are down, then keep twinkling, each on its own beat. */
+.star {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.lettering[data-phase='drawn'] .star {
+  animation: star-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(var(--i) * 40ms);
+}
+
+@keyframes star-in {
+  from {
+    opacity: 0;
+    transform: scale(0.1) rotate(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.twinkle {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: twinkle 2.6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -0.41s);
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.7) rotate(45deg);
+  }
+}
+
+/* The letters are smaller on a phone; the stars shrink less. */
+@media (max-width: 900px) {
+  .star {
+    scale: 1.6;
+  }
+}
+
+.pencil path {
+  fill: #111;
+  stroke: currentColor;
+  stroke-width: 0.55;
+  stroke-linejoin: round;
+}
+
+.pencil .lead {
+  fill: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lettering[data-phase='drawn'] .frame0,
+  .lettering[data-phase='drawn'] .frame1,
+  .lettering[data-phase='drawn'] .frame2 {
+    animation: none;
+  }
+
+  .lettering[data-phase='drawn'] .star {
+    animation: none;
+    opacity: 1;
+  }
+
+  .twinkle {
+    animation: none;
+  }
+}
