@@ -1,7 +1,8 @@
-/* Shared look for the project miniatures: white ink with a slight hand
-   wobble (the --sketch filter), small mono labels, dark fills where a shape
-   has to stay readable over a bright cover. All motion is transform,
-   opacity or stroke-dashoffset, and stops for reduced motion. */
+/* Shared look for the project miniatures: clean white ink, small mono
+   labels, dark fills where a shape needs a solid body. No SVG filters: they
+   are recomputed every frame for anything that moves, and eight covers
+   animating at once is where the stutter came from. All motion is
+   transform, opacity or stroke-dashoffset, and stops for reduced motion. */
 
 .stage {
   position: absolute;
@@ -17,7 +18,6 @@
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  filter: var(--sketch);
 }
 
 .thin {
@@ -187,7 +187,6 @@
   fill-opacity: 1;
   stroke: #fff;
   stroke-width: 1.4;
-  filter: var(--sketch);
   animation: node-hit var(--cycle) ease-out infinite;
   /* Arrivals at 0 %, 18 %, 46 %, 74 % of the loop; the second row runs
      half a loop later. */
@@ -295,7 +294,6 @@
 .glove {
   stroke: #fff;
   stroke-width: 1.4;
-  filter: var(--sketch);
 }
 
 .gloveA {

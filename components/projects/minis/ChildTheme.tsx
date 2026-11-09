@@ -20,7 +20,7 @@ const RED = '#da291c';
 
 export default function ChildTheme() {
   return (
-    <Sketch id="sketch-theme" label="A child theme's stylesheet repainting a grey page in PSG colours">
+    <Sketch label="A child theme's stylesheet repainting a grey page in PSG colours">
       {/* style.css */}
       <text x="18" y="26" className={styles.label}>
         style.css

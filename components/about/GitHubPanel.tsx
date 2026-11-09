@@ -56,7 +56,7 @@ export default function GitHubPanel({ profile, repos, contributions }: Props) {
               key={tile.label}
               className={styles.tile}
               data-reveal="up"
-              style={{ ['--d' as string]: `${0.15 + i * 0.09}s` }}
+              style={{ ['--d' as string]: `${0.08 + i * 0.06}s` }}
             >
               <dt className={styles.label}>{tile.label}</dt>
               <dd className={styles.value}>
@@ -112,7 +112,7 @@ export default function GitHubPanel({ profile, repos, contributions }: Props) {
             className={styles.block}
             aria-labelledby="recent-title"
             data-reveal="up"
-            style={{ ['--d' as string]: '0.12s' }}
+            style={{ ['--d' as string]: '0.08s' }}
           >
             <h4 id="recent-title" className={styles.subtitle}>
               Recently pushed

@@ -35,7 +35,7 @@ export default async function Projects() {
           <h3 className={styles.moreTitle}>Also on GitHub</h3>
           <ul className={styles.list}>
             {MORE_WORK.map((item, i) => (
-              <li key={item.repo} data-reveal="up" style={{ ['--d' as string]: `${0.1 + i * 0.07}s` }}>
+              <li key={item.repo} data-reveal="up" style={{ ['--d' as string]: `${0.05 + i * 0.045}s` }}>
                 <a href={`${GITHUB_URL}/${item.repo}`} target="_blank" rel="noopener noreferrer">
                   <span className={styles.name}>{item.title}</span>
                   <span className={styles.desc}>{item.summary}</span>
@@ -66,7 +66,7 @@ export default async function Projects() {
             rel="noopener noreferrer"
             className={styles.all}
             data-reveal="pop"
-            style={{ ['--d' as string]: '0.45s' }}
+            style={{ ['--d' as string]: '0.3s' }}
           >
             {profile ? `All ${profile.publicRepos} repositories` : 'All repositories'} on GitHub ↗
           </a>

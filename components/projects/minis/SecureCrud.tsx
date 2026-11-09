@@ -19,7 +19,7 @@ const ROWS = [
 
 export default function SecureCrud() {
   return (
-    <Sketch id="sketch-crud" label="Attacks typed into a form get blocked, then a valid driver is added to the table">
+    <Sketch label="Attacks typed into a form get blocked, then a valid driver is added to the table">
       {/* The input */}
       <text x="22" y="18" className={styles.label}>
         add a driver

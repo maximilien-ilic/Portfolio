@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
    The server renders the real value, so without JavaScript (or with
    reduced motion) the figure is just there; the count writes to the DOM
    directly, one frame at a time, without re-rendering. */
-export default function CountUp({ value, duration = 1600 }: { value: number; duration?: number }) {
+export default function CountUp({ value, duration = 900 }: { value: number; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {

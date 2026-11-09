@@ -25,7 +25,7 @@ export default function ProjectCard({ work, index = 0, language, pushedAt }: Pro
     <article
       className={`project-card ${styles.card} ${work.featured ? styles.featured : ''}`}
       data-reveal="up"
-      style={{ ['--d' as string]: `${work.featured ? 0 : ((index + 1) % 2) * 0.12}s` }}
+      style={{ ['--d' as string]: `${work.featured ? 0 : ((index + 1) % 2) * 0.08}s` }}
     >
       <Cover work={work} />
 

@@ -47,7 +47,7 @@ export default function MineralMap() {
   }
 
   return (
-    <Sketch id="sketch-mineral" label="A grid of element counts being classified into a colour-coded mineral map">
+    <Sketch label="A grid of element counts being classified into a colour-coded mineral map">
       <text x={X0} y={Y0 - 10} className={styles.label}>
         Si Ti Al Fe Mn Mg Ca Na K O P → phase
       </text>

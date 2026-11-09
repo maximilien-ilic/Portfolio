@@ -17,12 +17,12 @@ export default function Contact() {
           href={`mailto:${CONTACT_EMAIL}`}
           className={styles.email}
           data-reveal="pop"
-          style={{ ['--d' as string]: '0.35s' }}
+          style={{ ['--d' as string]: '0.2s' }}
         >
           {CONTACT_EMAIL}
         </a>
 
-        <ul className={styles.links} data-reveal="up" style={{ ['--d' as string]: '0.5s' }}>
+        <ul className={styles.links} data-reveal="up" style={{ ['--d' as string]: '0.3s' }}>
           <li>
             <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
               GitHub ↗

@@ -80,30 +80,32 @@ button {
 
 /* Blocks come in as they scroll into view, once (see RevealObserver).
    Only active under .reveal-on, which the layout's inline script adds when
-   motion is allowed. Motion uses the individual translate / scale
-   properties, so it never fights a component's own transform (card
-   hovers keep working). --d staggers siblings. */
+   motion is allowed.
+
+   Kept short and cheap so it stays smooth: only opacity, translate and
+   scale move (all composited — no blur, no layout), over ~0.6 s. Motion
+   uses the individual translate / scale properties, so it never fights a
+   component's own transform (card hovers keep working). --d staggers
+   siblings. */
 
 .reveal-on [data-reveal] {
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   transition:
-    opacity 0.9s var(--ease-out) var(--d, 0s),
-    translate 1s var(--ease-out) var(--d, 0s),
-    scale 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0s),
-    filter 0.9s var(--ease-out) var(--d, 0s),
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s ease;
+    opacity 0.55s var(--ease-out) var(--d, 0s),
+    translate 0.65s var(--ease-out) var(--d, 0s),
+    scale 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) var(--d, 0s),
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s ease;
 }
 
 .reveal-on [data-reveal='up']:not([data-shown]) {
   opacity: 0;
-  translate: 0 56px;
-  filter: blur(8px);
+  translate: 0 28px;
 }
 
 .reveal-on [data-reveal='pop']:not([data-shown]) {
   opacity: 0;
-  scale: 0.6;
+  scale: 0.8;
 }
 
 /* The statements' black strips are drawn like a highlighter: each line's
@@ -112,12 +114,12 @@ button {
    visible to the IntersectionObserver, which ignores clipped elements.) */
 .reveal-on [data-reveal='wipe'] > span {
   transition:
-    background-size 1s cubic-bezier(0.77, 0, 0.18, 1) var(--d, 0s),
-    color 0.5s ease calc(var(--d, 0s) + 0.55s);
+    background-size 0.6s cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0s),
+    color 0.35s ease calc(var(--d, 0s) + 0.3s);
 }
 
 .reveal-on [data-reveal='wipe'] > span em {
-  transition: opacity 0.5s ease calc(var(--d, 0s) + 0.6s);
+  transition: opacity 0.35s ease calc(var(--d, 0s) + 0.35s);
 }
 
 .reveal-on [data-reveal='wipe']:not([data-shown]) > span {

@@ -15,7 +15,7 @@ const H = 28;
 
 export default function Automations() {
   return (
-    <Sketch id="sketch-flow" label="Two automation workflows passing messages from node to node">
+    <Sketch label="Two automation workflows passing messages from node to node">
       {ROWS.map((row, r) => (
         <g key={row.title} style={{ ['--row' as string]: r }}>
           <text x={row.x0} y={row.y - 10} className={styles.label}>

@@ -15,7 +15,7 @@ export default function Boxing() {
   HIDDEN.forEach((a) => OUTPUTS.forEach((b) => edges.push([244, a, 292, b])));
 
   return (
-    <Sketch id="sketch-box" label="Two boxers sparring in a ring, driven by a small neural network">
+    <Sketch label="Two boxers sparring in a ring, driven by a small neural network">
       {/* The ring: ropes and corner posts */}
       <g className={styles.ink}>
         <rect x="22" y="36" width="132" height="132" rx="3" />

@@ -12,7 +12,7 @@ const SURFACE = Array(17).fill('q8 -4 16 0').join(' ');
 
 export default function DiveLog() {
   return (
-    <Sketch id="sketch-dive" label="A dive profile being drawn, with a fast ascent flagged">
+    <Sketch label="A dive profile being drawn, with a fast ascent flagged">
       {/* Surface and depth scale */}
       <g className={styles.ink}>
         <path d={`M34 38 ${SURFACE}`} className={styles.thin} />

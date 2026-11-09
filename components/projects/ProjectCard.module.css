@@ -1,12 +1,11 @@
-/* The whole card is printed on the camouflage canvas (see
-   scripts/textures/camo.py); the text part lies under a dark veil so the
-   pattern stays in the background. */
+/* Plain dark surfaces: the cover a shade lighter than the text part, so
+   the miniature reads as a screen set into the card. */
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #0c1521 url('/textures/camo-canvas.webp') 0 0 / 384px repeat;
+  background: #111113;
   border-radius: 22px;
   color: #fff;
   box-shadow: 0 24px 60px -30px rgb(0 0 0 / 0.6);
@@ -55,7 +54,6 @@
   gap: 14px;
   flex: 1;
   padding: 26px 28px 22px;
-  background: linear-gradient(rgb(9 11 15 / 0.8), rgb(9 11 15 / 0.9));
 }
 
 .featured .body {

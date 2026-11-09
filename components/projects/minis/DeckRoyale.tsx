@@ -15,7 +15,7 @@ const DROP = 'M0 -9 C5 -3 7 1 7 4 A7 7 0 0 1 -7 4 C-7 1 -5 -3 0 -9 Z';
 
 export default function DeckRoyale() {
   return (
-    <Sketch id="sketch-deck" label="Eight cards flipping over to reveal their elixir cost">
+    <Sketch label="Eight cards flipping over to reveal their elixir cost">
       {COSTS.map((cost, i) => {
         const x = X[i % 4];
         const y = Y[Math.floor(i / 4)];

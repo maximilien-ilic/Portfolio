@@ -1,36 +1,15 @@
-/* The cover shows the card's camouflage canvas at full strength (the body
-   below dims it) and frames the project's miniature. The texture drifts a
-   little when the card is hovered. */
+/* The cover: a plain panel, a shade lighter than the card, that frames the
+   project's miniature. */
 .cover {
   position: relative;
   aspect-ratio: 16 / 10;
   overflow: hidden;
   padding: 4% 5%;
-  background: url('/textures/camo-canvas.webp') 0 0 / 384px repeat;
-  transition: background-position 1.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* A soft dark centre so the white ink of the miniature always reads. */
-.cover::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, rgb(5 8 12 / 0.6), rgb(5 8 12 / 0.32) 75%);
-  pointer-events: none;
+  background: #18181c;
 }
 
 .cover > svg {
   position: relative;
   width: 100%;
   height: 100%;
-}
-
-:global(.project-card):hover .cover {
-  background-position: -48px -24px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cover {
-    transition: none;
-  }
 }

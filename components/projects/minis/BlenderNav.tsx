@@ -30,7 +30,7 @@ const sides = `M${CX - S} ${TOP + S / 2} V${TOP + S / 2 + H} L${CX} ${TOP + S + 
 
 export default function BlenderNav() {
   return (
-    <Sketch id="sketch-blender" label="Blender driven from the keyboard: a cube is extruded without touching the mouse">
+    <Sketch label="Blender driven from the keyboard: a cube is extruded without touching the mouse">
       {/* Viewport */}
       <g className={styles.ink}>
         <rect x="18" y="14" width="284" height="118" rx="6" className={styles.thin} />
