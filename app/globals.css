@@ -138,3 +138,12 @@ button {
 .reveal-on [data-live]:not([data-playing]) * {
   animation-play-state: paused !important;
 }
+
+/* -------------------------------------------------------------- languages */
+
+/* Every string is in the page in both languages (components/i18n/T.tsx);
+   only the one matching <html data-lang> is shown. */
+html[data-lang='fr'] [data-l='en'],
+html[data-lang='en'] [data-l='fr'] {
+  display: none !important;
+}

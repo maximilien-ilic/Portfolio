@@ -1,3 +1,4 @@
+import SvgT from '@/components/i18n/SvgT';
 import Sketch from './Sketch';
 import styles from './minis.module.css';
 
@@ -46,11 +47,11 @@ export default function DiveLog() {
         <g transform="translate(238 92)" className={styles.warnTag}>
           <rect width="64" height="14" rx="3" />
           <text x="32" y="10" textAnchor="middle">
-            ⚠ too fast
+            ⚠ <SvgT fr="trop rapide" en="too fast" />
           </text>
         </g>
         <text x="300" y="16" textAnchor="end" className={styles.label}>
-          max 27 m · nitrox 32%
+          <SvgT fr="max 27 m · nitrox 32 %" en="max 27 m · nitrox 32%" />
         </text>
         <text x="300" y="28" textAnchor="end" className={styles.label}>
           Bühlmann ZH-L16C ✓

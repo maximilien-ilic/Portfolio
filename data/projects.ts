@@ -3,6 +3,9 @@ export interface Project {
   name: string;
   badge: string;
   title: string;
+  titleFr: string;
+  descriptionFr: string;
+  badgeFr: string;
   description: string;
   tags?: string[];
   image?: string | null;
@@ -13,6 +16,9 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: 'crud-security-formula1',
+    titleFr: "Site CRUD sécurisé de Formule 1",
+    descriptionFr: "Mini-site de Formule 1 avec gestion complète des données, conçu selon les bonnes pratiques de développement web et de sécurité : validation des entrées, authentification et protection contre les injections SQL, XSS et CSRF.",
+    badgeFr: "cybersécurité",
     name: 'Crud-security-formula1',
     badge: 'cybersecurity',
     title: 'Secure Formula 1 CRUD Website',
@@ -26,6 +32,9 @@ export const projects: Project[] = [
   },
   {
     slug: 'theme-enfant-miyazaki-psg',
+    titleFr: "Thème enfant WordPress — PSG × Miyazaki",
+    descriptionFr: "Un thème enfant WordPress basé sur Miyazaki et personnalisé pour le Paris Saint-Germain, avec des styles et des modèles adaptés à l’identité du PSG.",
+    badgeFr: "développement web",
     name: 'theme-enfant-Miyazaki-PSG',
     badge: 'web development',
     title: 'WordPress Child Theme — PSG x Miyazaki',
@@ -39,6 +48,9 @@ export const projects: Project[] = [
   },
   {
     slug: 'themed-button-navigator-blender',
+    titleFr: "Extension Blender — Navigation au clavier",
+    descriptionFr: "Une extension Blender pour parcourir les thèmes et exécuter plus de 200 commandes grâce aux raccourcis clavier, sans toucher à la souris.",
+    badgeFr: "Extension",
     name: 'Themed Button Navigator for Blender',
     badge: 'Add-On',
     title: 'Blender Addon — Keyboard Navigator',
@@ -52,6 +64,9 @@ export const projects: Project[] = [
   },
   {
     slug: 'MVC-amusement-park',
+    titleFr: "Site de réservation pour un parc d’attractions",
+    descriptionFr: "Le site permet de créer un compte, de consulter les activités du parc et de réserver des créneaux. Chaque utilisateur gère ses réservations dans son espace personnel, tandis que les administrateurs configurent les activités, les horaires et les capacités.",
+    badgeFr: "POO",
     name: 'MVC project for an amusement park booking website ',
     badge: 'POO',
     title: 'amusement park booking website',

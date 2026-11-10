@@ -1,3 +1,4 @@
+import SvgT from '@/components/i18n/SvgT';
 import Sketch from './Sketch';
 import styles from './minis.module.css';
 
@@ -73,10 +74,10 @@ export default function Boxing() {
         ))}
       </g>
       <text x="292" y="150" textAnchor="end" className={styles.label}>
-        jab · move
+        <SvgT fr="jab · esquive" en="jab · move" />
       </text>
       <text x="196" y="40" className={styles.label}>
-        NEAT · gen 42
+        <SvgT fr="NEAT · gén. 42" en="NEAT · gen 42" />
       </text>
     </Sketch>
   );

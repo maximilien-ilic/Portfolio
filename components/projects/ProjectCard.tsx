@@ -1,6 +1,7 @@
 import type { Work } from '@/data/work';
 import { GITHUB_URL } from '@/data/site';
 import { techColor, techColors } from '@/data/tech';
+import T, { DateT } from '@/components/i18n/T';
 import Cover from './Cover';
 import styles from './ProjectCard.module.css';
 
@@ -10,10 +11,6 @@ interface Props {
   index?: number;
   language?: string | null;
   pushedAt?: string;
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 /* The title links to the repository and stretches over the whole card, so
@@ -31,17 +28,25 @@ export default function ProjectCard({ work, index = 0, language, pushedAt }: Pro
 
       <div className={styles.body}>
         <div className={styles.chips}>
-          <span className={`${styles.chip} ${styles[work.tone]}`}>{work.kind}</span>
-          {work.status && <span className={`${styles.chip} ${styles.status}`}>{work.status}</span>}
+          <span className={`${styles.chip} ${styles[work.tone]}`}>
+            <T {...work.kind} />
+          </span>
+          {work.status && (
+            <span className={`${styles.chip} ${styles.status}`}>
+              <T {...work.status} />
+            </span>
+          )}
         </div>
 
         <h3 className={styles.title}>
           <a href={url} target="_blank" rel="noopener noreferrer" className={styles.stretched}>
-            {work.title}
+            <T {...work.title} />
           </a>
         </h3>
 
-        <p className={styles.summary}>{work.summary}</p>
+        <p className={styles.summary}>
+          <T {...work.summary} />
+        </p>
 
         <ul className={styles.stack} aria-label="Stack">
           {work.stack.map((item) => (
@@ -59,12 +64,17 @@ export default function ProjectCard({ work, index = 0, language, pushedAt }: Pro
                 {language}
               </span>
             )}
-            {pushedAt && <span>updated {formatDate(pushedAt)}</span>}
+            {pushedAt && (
+              <span>
+                <T fr="mis à jour le " en="updated " />
+                <DateT iso={pushedAt} />
+              </span>
+            )}
           </span>
           <span className={styles.links}>
             {work.demo && (
               <a href={work.demo} target="_blank" rel="noopener noreferrer" className={styles.demo}>
-                Live ↗
+                <T fr="Démo ↗" en="Live ↗" />
               </a>
             )}
             <span className={styles.code} aria-hidden="true">

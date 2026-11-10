@@ -1,3 +1,4 @@
+import T from '@/components/i18n/T';
 import Link from 'next/link';
 import styles from './not-found.module.css';
 
@@ -8,7 +9,7 @@ export default function NotFound() {
         <p className={styles.error}>$ cd /page-that-exists</p>
         <p className={styles.output}>bash: cd: /page-that-exists: No such file or directory</p>
         <p className={styles.code}>404</p>
-        <p className={styles.message}>This page doesn&apos;t exist.</p>
+        <p className={styles.message}><T fr="Cette page n’existe pas." en="This page doesn’t exist." /></p>
         <Link href="/" className={styles.link}>$ cd ~</Link>
       </div>
     </div>

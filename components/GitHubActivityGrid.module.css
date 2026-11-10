@@ -37,11 +37,11 @@
   color: #8e8f95;
 }
 
-.legend span:first-child {
+.legend > span:first-child {
   margin-right: 4px;
 }
 
-.legend span:last-child {
+.legend > span:last-child {
   margin-left: 4px;
 }
 

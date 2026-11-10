@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
+import T from "@/components/i18n/T";
 import styles from "./GitHubActivityGrid.module.css";
 
 /* Adapted from Wensity's GitHub-Style Activity Grid
@@ -37,18 +38,34 @@ export interface GitHubActivityGridProps {
   cellSize?: number;
   /** Gap between cells in px. Default 4. */
   cellGap?: number;
-  /** Text shown after the total. Default "contributions in the last year";
-      an empty string hides the total line. */
-  label?: string;
-  /** Singular / plural unit used in the tooltip and aria labels. */
-  unit?: [singular: string, plural: string];
+  /** Text shown after the total. Default "contributions in the last year"
+      (in both languages); null hides the total line. */
+  label?: React.ReactNode;
+  /** Singular / plural unit used in the tooltip, in each language. */
+  unit?: { fr: [singular: string, plural: string]; en: [singular: string, plural: string] };
   className?: string;
 }
 
 const LEVEL_CLASS = [styles.l0, styles.l1, styles.l2, styles.l3, styles.l4] as const;
 
-const WEEKDAYS = ["", "Mon", "", "Wed", "", "Fri", ""] as const;
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const WEEKDAYS = [
+  null,
+  { fr: "Lun", en: "Mon" },
+  null,
+  { fr: "Mer", en: "Wed" },
+  null,
+  { fr: "Ven", en: "Fri" },
+  null,
+] as const;
+const MONTHS = {
+  fr: ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+};
+
+const DEFAULT_UNIT = {
+  fr: ["contribution", "contributions"] as [string, string],
+  en: ["contribution", "contributions"] as [string, string],
+};
 
 const WEEKDAY_LABEL_WIDTH = 28;
 const WEEKDAY_LABEL_GAP = 4;
@@ -74,8 +91,8 @@ export function GitHubActivityGrid({
   maxCount,
   cellSize = 12,
   cellGap = 4,
-  label = "contributions in the last year",
-  unit = ["contribution", "contributions"],
+  label = <T fr="contributions sur la dernière année" en="contributions in the last year" />,
+  unit = DEFAULT_UNIT,
   className,
 }: GitHubActivityGridProps) {
 
@@ -97,7 +114,7 @@ export function GitHubActivityGrid({
   /* ---------------- group into [week][weekday] grid ---------------------- */
   // Day 0 = first cell. We pad the start to align Sunday=0 of week 0.
   const grid = React.useMemo(() => {
-    if (days.length === 0) return { weeks: [] as (ActivityDay | null)[][], monthLabels: [] as { col: number; label: string }[] };
+    if (days.length === 0) return { weeks: [] as (ActivityDay | null)[][], monthLabels: [] as { col: number; month: number }[] };
     const first = new Date(days[0].date + "T00:00:00");
     const startWeekday = first.getDay(); // 0..6
     const flat: (ActivityDay | null)[] = [
@@ -113,14 +130,14 @@ export function GitHubActivityGrid({
     }
 
     // month labels per week column (label appears at first week containing day 1..7 of month)
-    const monthLabels: { col: number; label: string }[] = [];
+    const monthLabels: { col: number; month: number }[] = [];
     let lastMonth = -1;
     weeks.forEach((wk, col) => {
       const firstReal = wk.find(Boolean) as ActivityDay | undefined;
       if (!firstReal) return;
       const m = new Date(firstReal.date + "T00:00:00").getMonth();
       if (m !== lastMonth) {
-        monthLabels.push({ col, label: MONTHS[m] });
+        monthLabels.push({ col, month: m });
         lastMonth = m;
       }
     });
@@ -205,7 +222,7 @@ export function GitHubActivityGrid({
     >
       {/* Header */}
       <div className={styles.header}>
-        {label ? (
+        {label !== null ? (
           <p className={styles.total}>
             <span className={styles.count}>{totalContributions.toLocaleString("en")}</span> {label}
           </p>
@@ -227,11 +244,11 @@ export function GitHubActivityGrid({
         >
           {grid.monthLabels.map((m) => (
             <span
-              key={`${m.col}-${m.label}`}
+              key={`${m.col}-${m.month}`}
               className={styles.month}
               style={{ left: m.col * (cell + gap) }}
             >
-              {m.label}
+              <T fr={MONTHS.fr[m.month]} en={MONTHS.en[m.month]} />
             </span>
           ))}
         </div>
@@ -244,7 +261,7 @@ export function GitHubActivityGrid({
           >
             {WEEKDAYS.map((wd, i) => (
               <span key={i} className={styles.weekday} style={{ height: cell }}>
-                {wd}
+                {wd && <T {...wd} />}
               </span>
             ))}
           </div>
@@ -275,7 +292,7 @@ export function GitHubActivityGrid({
                       key={day.date}
                       type="button"
                       data-i={wIdx * 7 + dIdx - startPad}
-                      aria-label={`${day.count} ${day.count === 1 ? unit[0] : unit[1]} on ${day.date}`}
+                      aria-label={`${day.count} · ${day.date}`}
                       className={`${styles.cell} ${LEVEL_CLASS[lvl]}`}
                       // index back from the end → most recent day first
                       style={{ width: cell, height: cell, ["--r" as string]: fromEnd }}
@@ -302,8 +319,11 @@ export function GitHubActivityGrid({
       >
         {hover ? (
           <>
-            <strong>{hover.count}</strong> {hover.count === 1 ? unit[0] : unit[1]}
-            <span className={styles.date}>· {formatDate(hover.date)}</span>
+            <strong>{hover.count}</strong>{" "}
+            <T fr={unit.fr[hover.count === 1 ? 0 : 1]} en={unit.en[hover.count === 1 ? 0 : 1]} />
+            <span className={styles.date}>
+              · <T fr={formatDate(hover.date, "fr-FR")} en={formatDate(hover.date, "en-GB")} />
+            </span>
           </>
         ) : null}
       </motion.div>
@@ -314,18 +334,22 @@ export function GitHubActivityGrid({
 function Legend() {
   return (
     <div className={styles.legend} aria-hidden="true">
-      <span>Less</span>
+      <span>
+        <T fr="Moins" en="Less" />
+      </span>
       {LEVEL_CLASS.map((cls, i) => (
         <span key={i} className={`${styles.swatch} ${cls}`} />
       ))}
-      <span>More</span>
+      <span>
+        <T fr="Plus" en="More" />
+      </span>
     </div>
   );
 }
 
-function formatDate(iso: string) {
+function formatDate(iso: string, locale: string) {
   const d = new Date(iso + "T00:00:00");
-  return d.toLocaleDateString("en", {
+  return d.toLocaleDateString(locale, {
     weekday: "short",
     month: "short",
     day: "numeric",

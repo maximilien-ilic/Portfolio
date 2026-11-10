@@ -1,3 +1,4 @@
+import SvgT from '@/components/i18n/SvgT';
 import Sketch from './Sketch';
 import styles from './minis.module.css';
 
@@ -10,6 +11,13 @@ const MESSAGES = [
   '>>> IN: Modeling [1/12]: Extrude',
   '✓ Extrude',
   '<<< BACK · THEME [2/25]: Modeling'
+];
+
+const MESSAGES_FR = [
+  'THÈME [2/25] : Modélisation',
+  '>>> DANS : Modélisation [1/12] : Extrusion',
+  '✓ Extrusion',
+  '<<< RETOUR · THÈME [2/25] : Modélisation'
 ];
 
 const KEYS = [
@@ -62,7 +70,7 @@ export default function BlenderNav() {
       {/* Status line */}
       {MESSAGES.map((m, i) => (
         <text key={m} x="24" y="150" className={`${styles.status} ${styles[`msg${i}`]}`}>
-          {m}
+          <SvgT fr={MESSAGES_FR[i]} en={m} />
         </text>
       ))}
 

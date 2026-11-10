@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import HandLettering from '@/components/lettering/HandLettering';
+import T from '@/components/i18n/T';
 import { NAME } from '@/data/site';
 import styles from './Hero.module.css';
 
@@ -9,10 +10,10 @@ import styles from './Hero.module.css';
    that matters is red and torn along the bottom edge. The yellow bubble on
    top is the only call to action in the hero. */
 const CHIPS = [
-  { text: 'secure-minded', tone: 'red' },
-  { text: 'fullstack developer', tone: 'grey' },
-  { text: '&', tone: 'dark' },
-  { text: 'cybersecurity student', tone: 'grey' }
+  { key: 'secure', fr: 'esprit sécurité', en: 'secure-minded', tone: 'red' },
+  { key: 'dev', fr: 'développeur fullstack', en: 'fullstack developer', tone: 'grey' },
+  { key: 'and', fr: '&', en: '&', tone: 'dark' },
+  { key: 'student', fr: 'étudiant en cybersécurité', en: 'cybersecurity student', tone: 'grey' }
 ] as const;
 
 export default function Hero() {
@@ -30,8 +31,10 @@ export default function Hero() {
       <div className={styles.tagline}>
         {bubble && (
           <div className={styles.bubble}>
-            <a href="#contact">let’s talk?</a>
-            <button type="button" aria-label="Dismiss" onClick={() => setBubble(false)}>
+            <a href="#contact">
+              <T fr="on en parle ?" en="let’s talk?" />
+            </a>
+            <button type="button" aria-label="Fermer · Dismiss" onClick={() => setBubble(false)}>
               <svg viewBox="0 0 12 12" aria-hidden="true">
                 <path d="M2 2 L10 10 M10 2 L2 10" />
               </svg>
@@ -42,20 +45,22 @@ export default function Hero() {
         <p className={styles.chips}>
           {CHIPS.map((chip, index) => (
             <span
-              key={chip.text}
+              key={chip.key}
               className={`${styles.chip} ${styles[chip.tone]}`}
               style={{ ['--i' as string]: index }}
             >
-              {chip.text}
+              <T fr={chip.fr} en={chip.en} />
             </span>
           ))}
         </p>
       </div>
 
-      <a href="#about" className={styles.scroll} aria-label="Scroll to the about section">
+      <a href="#about" className={styles.scroll} aria-label="À propos · About">
         <span className={styles.marquee} aria-hidden="true">
           {Array.from({ length: 4 }, (_, i) => (
-            <span key={i}>scroll for more</span>
+            <span key={i} className={styles.marqueeItem}>
+              <T fr="défiler pour voir" en="scroll for more" />
+            </span>
           ))}
         </span>
       </a>

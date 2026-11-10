@@ -184,7 +184,7 @@
   animation: marquee 9s linear infinite;
 }
 
-.marquee span {
+.marqueeItem {
   padding-right: 22px;
 }
 

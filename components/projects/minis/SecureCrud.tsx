@@ -1,3 +1,4 @@
+import SvgT from '@/components/i18n/SvgT';
 import Sketch from './Sketch';
 import styles from './minis.module.css';
 
@@ -6,9 +7,9 @@ import styles from './minis.module.css';
    the table. One 9 s loop, three beats of 3 s. */
 
 const PHASES = [
-  { text: "' OR 1=1 --", stamp: 'SQLi blocked', tone: styles.stampBad, cls: styles.phaseA },
-  { text: '<script>alert(1)', stamp: 'XSS escaped', tone: styles.stampBad, cls: styles.phaseB },
-  { text: 'Leclerc', stamp: 'inserted ✓', tone: styles.stampGood, cls: styles.phaseC }
+  { text: "' OR 1=1 --", stamp: 'SQLi blocked', fr: 'SQLi bloquée', tone: styles.stampBad, cls: styles.phaseA },
+  { text: '<script>alert(1)', stamp: 'XSS escaped', fr: 'XSS échappé', tone: styles.stampBad, cls: styles.phaseB },
+  { text: 'Leclerc', stamp: 'inserted ✓', fr: 'ajouté ✓', tone: styles.stampGood, cls: styles.phaseC }
 ];
 
 const ROWS = [
@@ -22,7 +23,7 @@ export default function SecureCrud() {
     <Sketch label="Attacks typed into a form get blocked, then a valid driver is added to the table">
       {/* The input */}
       <text x="22" y="18" className={styles.label}>
-        add a driver
+        <SvgT fr="ajouter un pilote" en="add a driver" />
       </text>
       <g className={styles.ink}>
         <rect x="22" y="24" width="186" height="24" rx="4" className={styles.field} />
@@ -47,7 +48,7 @@ export default function SecureCrud() {
             <g className={`${styles.stamp} ${phase.tone}`}>
               <rect width="86" height="20" rx="3" />
               <text x="43" y="13.5" textAnchor="middle">
-                {phase.stamp}
+                <SvgT fr={phase.fr} en={phase.stamp} />
               </text>
             </g>
           </g>
@@ -57,13 +58,13 @@ export default function SecureCrud() {
       {/* The table */}
       <g transform="translate(22 66)">
         <text x="6" y="10" className={styles.tableHead}>
-          driver
+          <SvgT fr="pilote" en="driver" />
         </text>
         <text x="96" y="10" className={styles.tableHead}>
-          team
+          <SvgT fr="écurie" en="team" />
         </text>
         <text x="236" y="10" textAnchor="end" className={styles.tableHead}>
-          edit · delete
+          <SvgT fr="modifier · suppr." en="edit · delete" />
         </text>
         <g className={styles.ink}>
           {[16, 40, 64, 88, 112].map((y) => (
@@ -98,7 +99,7 @@ export default function SecureCrud() {
       </g>
 
       <text x="298" y="194" textAnchor="end" className={styles.label}>
-        PDO prepared · CSRF token ✓
+        <SvgT fr="PDO préparé · jeton CSRF ✓" en="PDO prepared · CSRF token ✓" />
       </text>
     </Sketch>
   );

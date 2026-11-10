@@ -1,3 +1,4 @@
+import SvgT from '@/components/i18n/SvgT';
 import Sketch from './Sketch';
 import styles from './minis.module.css';
 
@@ -50,7 +51,7 @@ export default function DeckRoyale() {
       <g transform="translate(106 166)" className={styles.average}>
         <rect width="108" height="18" rx="9" />
         <text x="54" y="12.5" textAnchor="middle">
-          avg elixir 3.6
+          <SvgT fr="élixir moyen 3,6" en="avg elixir 3.6" />
         </text>
       </g>
     </Sketch>

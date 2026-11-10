@@ -1,3 +1,4 @@
+import SvgT from '@/components/i18n/SvgT';
 import Sketch from './Sketch';
 import styles from './minis.module.css';
 
@@ -82,7 +83,7 @@ export default function ChildTheme() {
       <g transform="translate(18 166)" className={styles.themeDone}>
         <rect width="104" height="18" rx="9" />
         <text x="52" y="12.5" textAnchor="middle">
-          child theme active ✓
+          <SvgT fr="thème enfant actif ✓" en="child theme active ✓" />
         </text>
       </g>
     </Sketch>

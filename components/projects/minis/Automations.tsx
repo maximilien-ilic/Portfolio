@@ -1,3 +1,4 @@
+import SvgT from '@/components/i18n/SvgT';
 import Sketch from './Sketch';
 import styles from './minis.module.css';
 
@@ -6,8 +7,8 @@ import styles from './minis.module.css';
    the pull-request audit, whose last node is the security report. */
 
 const ROWS = [
-  { title: 'daily email recap', y: 46, nodes: ['18:00', 'Gmail', 'Agent', 'Discord'], x0: 22, step: 72, packet: '' },
-  { title: 'pull request audit', y: 128, nodes: ['PR', 'Claude', 'Report'], x0: 58, step: 84, packet: styles.packetBottom }
+  { title: 'daily email recap', fr: 'résumé quotidien des emails', y: 46, nodes: ['18:00', 'Gmail', 'Agent', 'Discord'], x0: 22, step: 72, packet: '' },
+  { title: 'pull request audit', fr: 'audit de pull request', y: 128, nodes: ['PR', 'Claude', 'Report'], x0: 58, step: 84, packet: styles.packetBottom }
 ];
 
 const W = 56;
@@ -19,7 +20,7 @@ export default function Automations() {
       {ROWS.map((row, r) => (
         <g key={row.title} style={{ ['--row' as string]: r }}>
           <text x={row.x0} y={row.y - 10} className={styles.label}>
-            {row.title}
+            <SvgT fr={row.fr} en={row.title} />
           </text>
 
           <g className={styles.ink}>
@@ -51,7 +52,7 @@ export default function Automations() {
               >
                 <rect width={W} height={H} rx="7" className={styles.nodeBox} />
                 <text x={W / 2} y={H / 2 + 3} textAnchor="middle" className={styles.nodeLabel}>
-                  {node}
+                  {node === 'Report' ? <SvgT fr="Rapport" en="Report" /> : node}
                 </text>
               </g>
             );

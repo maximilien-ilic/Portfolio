@@ -55,9 +55,20 @@
   position: relative;
 }
 
+.divider {
+  width: 1px;
+  margin: 8px 2px;
+  background: #2e2f34;
+}
+
+.pills > li {
+  display: flex;
+}
+
 @media (max-width: 420px) {
   .pill {
-    padding: 9px 16px 10px;
+    padding: 9px 12px 10px;
     font-size: 11px;
+    letter-spacing: 0.08em;
   }
 }

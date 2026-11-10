@@ -2,15 +2,17 @@
 
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import LangSwitch from '@/components/i18n/LangSwitch';
+import T from '@/components/i18n/T';
 import styles from './PillNav.module.css';
 
 const ITEMS = [
-  { id: 'home', label: 'Home' },
-  { id: 'about', label: 'About' },
-  { id: 'contact', label: 'Contact' }
+  { id: 'home', label: { fr: 'Accueil', en: 'Home' } },
+  { id: 'about', label: { fr: 'À propos', en: 'About' } },
+  { id: 'contact', label: { fr: 'Contact', en: 'Contact' } }
 ];
 
-/* Three pills, fixed at the top. The lit one follows the scroll position;
+/* Three pills and the language switch, fixed at the top. The lit one follows the scroll position;
    clicking scrolls to the section smoothly. */
 export default function PillNav() {
   const [active, setActive] = useState('home');
@@ -73,10 +75,16 @@ export default function PillNav() {
                   transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                 />
               )}
-              <span className={styles.label}>{item.label}</span>
+              <span className={styles.label}>
+                <T {...item.label} />
+              </span>
             </a>
           </li>
         ))}
+        <li className={styles.divider} aria-hidden="true" />
+        <li>
+          <LangSwitch />
+        </li>
       </ul>
     </nav>
   );

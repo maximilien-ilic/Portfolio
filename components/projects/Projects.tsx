@@ -2,6 +2,7 @@ import { MORE_WORK, WORK } from '@/data/work';
 import { GITHUB_HANDLE, GITHUB_URL } from '@/data/site';
 import { techColor } from '@/data/tech';
 import { getProfile, getRepos } from '@/utils/github';
+import T from '@/components/i18n/T';
 import ProjectCard from './ProjectCard';
 import styles from './Projects.module.css';
 
@@ -13,10 +14,12 @@ export default async function Projects() {
     <section id="projects" className={styles.projects} aria-labelledby="projects-title">
       <div className={styles.inner}>
         <p className={styles.eyebrow} data-reveal="pop">
-          Projects
+          <T fr="Projets" en="Projects" />
         </p>
         <h2 id="projects-title" className={styles.statement} data-reveal="wipe" style={{ ['--d' as string]: '0.1s' }}>
-          <span className={styles.strip}>Built to understand how things work.</span>
+          <span className={styles.strip}>
+            <T fr="Construire pour comprendre comment ça marche." en="Built to understand how things work." />
+          </span>
         </h2>
 
         <div className={styles.grid}>
@@ -32,13 +35,19 @@ export default async function Projects() {
         </div>
 
         <div className={styles.more} data-reveal="up">
-          <h3 className={styles.moreTitle}>Also on GitHub</h3>
+          <h3 className={styles.moreTitle}>
+            <T fr="Aussi sur GitHub" en="Also on GitHub" />
+          </h3>
           <ul className={styles.list}>
             {MORE_WORK.map((item, i) => (
               <li key={item.repo} data-reveal="up" style={{ ['--d' as string]: `${0.05 + i * 0.045}s` }}>
                 <a href={`${GITHUB_URL}/${item.repo}`} target="_blank" rel="noopener noreferrer">
-                  <span className={styles.name}>{item.title}</span>
-                  <span className={styles.desc}>{item.summary}</span>
+                  <span className={styles.name}>
+                    <T {...item.title} />
+                  </span>
+                  <span className={styles.desc}>
+                    <T {...item.summary} />
+                  </span>
                   <span className={styles.lang}>
                     {live.get(item.repo)?.language && (
                       <>
@@ -53,7 +62,7 @@ export default async function Projects() {
                 </a>
                 {item.demo && (
                   <a href={item.demo} target="_blank" rel="noopener noreferrer" className={styles.live}>
-                    Live ↗
+                    <T fr="Démo ↗" en="Live ↗" />
                   </a>
                 )}
               </li>
@@ -68,7 +77,14 @@ export default async function Projects() {
             data-reveal="pop"
             style={{ ['--d' as string]: '0.3s' }}
           >
-            {profile ? `All ${profile.publicRepos} repositories` : 'All repositories'} on GitHub ↗
+            {profile ? (
+              <T
+                fr={`Les ${profile.publicRepos} dépôts sur GitHub ↗`}
+                en={`All ${profile.publicRepos} repositories on GitHub ↗`}
+              />
+            ) : (
+              <T fr="Tous les dépôts sur GitHub ↗" en="All repositories on GitHub ↗" />
+            )}
           </a>
         </div>
       </div>

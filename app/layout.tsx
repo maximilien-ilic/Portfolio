@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'Maximilien Ilic',
   description:
-    'Portfolio of Maximilien Ilic, fullstack developer and cybersecurity student at IIM Digital School.'
+    'Portfolio de Maximilien Ilic, développeur fullstack et étudiant en cybersécurité à l’IIM Digital School.'
 };
 
 /* The phone's browser bar takes the page's darkest colour instead of
@@ -34,17 +34,20 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="fr"
+      data-lang="fr"
       className={`${geist.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>
-        {/* Turns the scroll reveals on before first paint, unless the visitor
-            asked for reduced motion. Without it, nothing is ever hidden. */}
+        {/* Before first paint: turns the scroll reveals on (unless the
+            visitor asked for reduced motion — without it nothing is ever
+            hidden), and restores the language chosen on a previous visit
+            (French by default). */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reveal-on')"
+              "var h=document.documentElement;if(!matchMedia('(prefers-reduced-motion: reduce)').matches)h.classList.add('reveal-on');try{if(localStorage.getItem('lang')==='en'){h.dataset.lang='en';h.lang='en'}}catch(e){}"
           }}
         />
       </head>

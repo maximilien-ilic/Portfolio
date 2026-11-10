@@ -1,4 +1,5 @@
 import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL, NAME } from '@/data/site';
+import T from '@/components/i18n/T';
 import styles from './Contact.module.css';
 
 /* Deliberately short for now: the address, two profiles, done. */
@@ -10,7 +11,12 @@ export default function Contact() {
           Contact
         </p>
         <h2 id="contact-title" className={styles.title} data-reveal="wipe" style={{ ['--d' as string]: '0.1s' }}>
-          <span className={styles.strip}>Got an internship, a project or a question?</span>
+          <span className={styles.strip}>
+            <T
+              fr="Un stage, un projet ou une question ?"
+              en="Got an internship, a project or a question?"
+            />
+          </span>
         </h2>
 
         <a

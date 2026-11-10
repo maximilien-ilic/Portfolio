@@ -1,3 +1,5 @@
+import T from '@/components/i18n/T';
+import LangSwitch from '@/components/i18n/LangSwitch';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { projects } from '@/data/projects';
@@ -25,9 +27,10 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   return (
     <div className={styles.container}>
       <Link href="/" className={styles.backButton}>
-        ← Back
+        ← <T fr="Retour" en="Back" />
       </Link>
 
+      <LangSwitch />
       <div className={styles.content}>
         <div className={styles.hero}>
           {project.video ? (
@@ -46,12 +49,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         <div className={styles.header}>
           <h1 className={styles.title}>{project.name}</h1>
-          <span className={styles.badge}>{project.badge}</span>
+          <span className={styles.badge}><T fr={project.badgeFr} en={project.badge} /></span>
         </div>
 
-        <h2 className={styles.subtitle}>{project.title}</h2>
+        <h2 className={styles.subtitle}><T fr={project.titleFr} en={project.title} /></h2>
 
-        <p className={styles.description}>{project.description}</p>
+        <p className={styles.description}><T fr={project.descriptionFr} en={project.description} /></p>
 
         {project.tags && project.tags.length > 0 && (
           <div className={styles.techSection}>
@@ -74,7 +77,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {link.label}
+                <T fr="Voir sur GitHub" en={link.label} />
               </a>
             ))}
           </div>
@@ -82,11 +85,11 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {activity && (
           <div className={styles.activitySection}>
-            <h3 className={styles.sectionTitle}>Activity</h3>
+            <h3 className={styles.sectionTitle}><T fr="Activité" en="Activity" /></h3>
             <GitHubActivityGrid
               days={activity}
-              label="commits in the last year"
-              unit={['commit', 'commits']}
+              label={<T fr="commits sur la dernière année" en="commits in the last year" />}
+              unit={{ fr: ['commit', 'commits'], en: ['commit', 'commits'] }}
             />
           </div>
         )}
