@@ -27,6 +27,8 @@
 }
 
 .handle {
+  position: relative;
+  padding: 10px 0;
   font-family: var(--font-mono);
   font-size: 14px;
   color: #c3c2b7;
@@ -166,6 +168,7 @@
 }
 
 .recent li {
+  position: relative;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -183,6 +186,13 @@
   text-decoration: none;
   font-weight: 500;
   overflow-wrap: anywhere;
+}
+
+/* The whole row is the link's target, not just the name. */
+.recent a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
 }
 
 .recent a:hover {

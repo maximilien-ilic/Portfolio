@@ -14,10 +14,19 @@
     box-shadow 0.4s ease;
 }
 
-.card:hover,
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 34px 70px -30px rgb(0 0 0 / 0.75);
+  }
+
+  .card:hover .code {
+    background: #ffd43b;
+  }
+}
+
 .card:focus-within {
   transform: translateY(-4px);
-  box-shadow: 0 34px 70px -30px rgb(0 0 0 / 0.75);
 }
 
 /* The featured project — and whichever card would otherwise be left alone
@@ -193,9 +202,7 @@
   color: #0b0b0c;
 }
 
-.card:hover .code {
-  background: #ffd43b;
-}
+
 
 /* Above the stretched title link, so it is its own target. */
 .demo {

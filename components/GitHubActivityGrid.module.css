@@ -58,6 +58,20 @@
   padding-bottom: 2px;
 }
 
+/* Phones: the grid keeps a readable cell size and scrolls sideways. The
+   fade on the left edge says there is more that way. */
+.scrolls {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding-bottom: 6px;
+  mask-image: linear-gradient(90deg, transparent, #000 32px);
+}
+
+.scrolls::-webkit-scrollbar {
+  display: none;
+}
+
 .months {
   position: relative;
   height: 16px;
@@ -108,9 +122,29 @@
   cursor: default;
 }
 
-.cell:hover {
-  outline: 1.5px solid #fff;
-  outline-offset: 1px;
+/* Reveal: when the block holding the grid scrolls into view (data-shown,
+   see RevealObserver), the cells pop in backwards from today. Pure CSS, so
+   it costs nothing until then. */
+:global(.reveal-on) [data-reveal]:not([data-shown]) .cell {
+  opacity: 0;
+}
+
+:global(.reveal-on) [data-shown] .cell {
+  animation: cell-in 0.2s ease-out both;
+  animation-delay: calc(var(--r) * 2ms);
+}
+
+@keyframes cell-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) {
+  .cell:hover {
+    outline: 1.5px solid #fff;
+    outline-offset: 1px;
+  }
 }
 
 .cell:focus-visible {

@@ -115,6 +115,7 @@
 }
 
 .bubble button {
+  position: relative;
   display: grid;
   place-items: center;
   width: 1.1em;
@@ -123,6 +124,24 @@
   border: 0;
   background: none;
   cursor: pointer;
+}
+
+/* Bigger invisible hit areas (≥ 40px), so a thumb finds them without the
+   bubble getting any bigger. */
+.bubble a,
+.bubble button {
+  position: relative;
+}
+
+.bubble a::after,
+.bubble button::after {
+  content: '';
+  position: absolute;
+  inset: -10px -6px;
+}
+
+.bubble button::after {
+  inset: -11px;
 }
 
 .bubble svg {
@@ -139,7 +158,8 @@
 /* A small window with the words running through it, like the reference. */
 .scroll {
   position: absolute;
-  bottom: 32px;
+  bottom: 20px;
+  padding: 12px 0;
   left: 50%;
   width: 180px;
   transform: translateX(-50%);

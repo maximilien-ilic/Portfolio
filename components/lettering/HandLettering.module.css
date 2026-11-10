@@ -12,10 +12,6 @@
   column-gap: calc(var(--u) * 14);
   row-gap: calc(var(--u) * 2);
   color: #fff;
-  /* A soft dark halo keeps the white line readable when the field behind
-     turns yellow. */
-  filter: drop-shadow(0 0 calc(var(--u) * 5) rgb(0 0 0 / 0.35));
-  -webkit-tap-highlight-color: transparent;
 }
 
 @media (max-width: 900px) {
@@ -38,61 +34,29 @@
   flex: none;
 }
 
-.frame path {
+.outline path {
   fill: none;
   stroke: currentColor;
-  stroke-width: var(--stroke);
+  stroke-width: calc(var(--stroke) * 0.75);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-/* Filled titles: a thin, exact outline is drawn first, then each letter
-   fills in white as soon as it is closed. */
+/* The outline is drawn first, then each letter fills in white as soon as
+   it is closed. A soft dark halo keeps the letters readable when the field
+   behind turns yellow or pale pink. It sits on the letters only — once
+   drawn they never change, so the shadow is painted once, while the
+   twinkling stars stay outside it. */
+.letters {
+  filter: drop-shadow(0 0 5px rgb(0 0 0 / 0.35));
+}
+
 .fills path {
   fill: currentColor;
   transition: opacity 0.3s ease;
 }
 
-.filled .outline path {
-  stroke-width: calc(var(--stroke) * 0.75);
-}
-
-/* While drawing only frame 0 exists. Once drawn, the three frames take
-   turns: 3 × 140 ms, held, never tweened. */
-.frame1,
-.frame2 {
-  visibility: hidden;
-}
-
-.lettering[data-phase='drawn'] .frame0 {
-  animation: boil0 0.42s steps(1) infinite;
-}
-
-.lettering[data-phase='drawn'] .frame1 {
-  animation: boil1 0.42s steps(1) infinite;
-}
-
-.lettering[data-phase='drawn'] .frame2 {
-  animation: boil2 0.42s steps(1) infinite;
-}
-
-@keyframes boil0 {
-  0% { visibility: visible; }
-  33.333% { visibility: hidden; }
-}
-
-@keyframes boil1 {
-  0% { visibility: hidden; }
-  33.333% { visibility: visible; }
-  66.666% { visibility: hidden; }
-}
-
-@keyframes boil2 {
-  0% { visibility: hidden; }
-  66.666% { visibility: visible; }
-}
-
-/* Small stars inside the letters: they pop in one after the other once the
+/* Small stars around the letters: they pop in one after the other once the
    letters are down, then keep twinkling, each on its own beat. */
 .star {
   opacity: 0;
@@ -155,12 +119,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lettering[data-phase='drawn'] .frame0,
-  .lettering[data-phase='drawn'] .frame1,
-  .lettering[data-phase='drawn'] .frame2 {
-    animation: none;
-  }
-
   .lettering[data-phase='drawn'] .star {
     animation: none;
     opacity: 1;

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Geist, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -23,6 +23,12 @@ export const metadata: Metadata = {
   title: 'Maximilien Ilic',
   description:
     'Portfolio of Maximilien Ilic, fullstack developer and cybersecurity student at IIM Digital School.'
+};
+
+/* The phone's browser bar takes the page's darkest colour instead of
+   flashing white above the hero. */
+export const viewport: Viewport = {
+  themeColor: '#050507'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

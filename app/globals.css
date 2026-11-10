@@ -130,3 +130,11 @@ button {
 .reveal-on [data-reveal='wipe']:not([data-shown]) > span em {
   opacity: 0;
 }
+
+/* Looping animations pause while off screen (RevealObserver toggles
+   data-playing). Without JavaScript .reveal-on is never set, so nothing is
+   ever paused. */
+.reveal-on [data-live]:not([data-playing]),
+.reveal-on [data-live]:not([data-playing]) * {
+  animation-play-state: paused !important;
+}

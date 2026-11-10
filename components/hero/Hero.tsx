@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useState, useSyncExternalStore } from 'react';
-import HandLettering, { TITLES, type TitleId } from '@/components/lettering/HandLettering';
+import { useCallback, useState } from 'react';
+import HandLettering from '@/components/lettering/HandLettering';
 import { NAME } from '@/data/site';
 import styles from './Hero.module.css';
 
@@ -15,27 +15,16 @@ const CHIPS = [
   { text: 'cybersecurity student', tone: 'grey' }
 ] as const;
 
-const noop = () => () => {};
-
 export default function Hero() {
   const [drawn, setDrawn] = useState(false);
   const [bubble, setBubble] = useState(true);
   const onDrawn = useCallback(() => setDrawn(true), []);
 
-  // Title under test: ?title=estrella (default), estrella-drawn or anton.
-  // Read from the URL on the client; the server renders the default.
-  const asked = useSyncExternalStore(
-    noop,
-    () => new URLSearchParams(window.location.search).get('title'),
-    () => null
-  );
-  const title: TitleId = TITLES.includes(asked as TitleId) ? (asked as TitleId) : 'estrella';
-
   return (
-    <section id="home" className={styles.hero} data-drawn={drawn}>
+    <section id="home" className={styles.hero} data-drawn={drawn} data-live="">
       <h1 className={styles.title}>
         <span className="sr-only">{NAME}</span>
-        <HandLettering key={title} title={title} onDrawn={onDrawn} />
+        <HandLettering onDrawn={onDrawn} />
       </h1>
 
       <div className={styles.tagline}>

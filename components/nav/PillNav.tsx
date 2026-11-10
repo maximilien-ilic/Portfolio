@@ -38,12 +38,21 @@ export default function PillNav() {
       }
       setActive(current);
     };
+    // At most once per frame, however fast scroll events arrive.
+    let queued = 0;
+    const schedule = () => {
+      if (!queued) queued = requestAnimationFrame(() => {
+        queued = 0;
+        update();
+      });
+    };
     update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
     return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      cancelAnimationFrame(queued);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
     };
   }, []);
 

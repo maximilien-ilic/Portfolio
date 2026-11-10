@@ -11,10 +11,10 @@
   gap: 2px;
   padding: 3px;
   list-style: none;
-  background: rgb(14 14 16 / 0.82);
+  /* Solid rather than frosted: a live blur over the animated background
+     would be recomputed every frame. */
+  background: rgb(14 14 16 / 0.92);
   border-radius: 999px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.06) inset;
 }
 

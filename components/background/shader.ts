@@ -108,8 +108,13 @@ void main() {
   // shift holds along a line and jumps from one line to the next. 'fine'
   // varies a little along x so the lines fade and thicken like the
   // reference instead of being ruled.
-  float fine = snoise(vec2(p.y * 95.0, p.x * 0.7 + uTime * 0.02));
-  float reed = snoise(vec2(p.y * 26.0, 4.2 + p.x * 0.25));
+  // Skipped entirely in the hero (uMix is uniform, so the branch is free).
+  float fine = 0.0;
+  float reed = 0.0;
+  if (uMix > 0.0) {
+    fine = snoise(vec2(p.y * 95.0, p.x * 0.7 + uTime * 0.02));
+    reed = snoise(vec2(p.y * 26.0, 4.2 + p.x * 0.25));
+  }
 
   // The smear comes first and the reeds after (uMix squared), so the
   // transition reads as motion blur turning into glass, not as a glitch.

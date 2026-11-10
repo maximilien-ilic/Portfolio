@@ -1,14 +1,19 @@
 "use client";
 
 import * as React from "react";
-import { motion, useSpring, useMotionValue, useReducedMotion } from "motion/react";
+import { motion, useSpring, useMotionValue } from "motion/react";
 import styles from "./GitHubActivityGrid.module.css";
 
 /* Adapted from Wensity's GitHub-Style Activity Grid
    (https://ui.wensity.com/components/github-activity-grid): one tooltip
    shared by every day, sprung between cells, and a reveal that runs
    backwards from today. Cells snap to whole-pixel sizes so they stay crisp
-   at any width. */
+   at any width; below a readable size (phones) the grid keeps that size and
+   scrolls sideways instead, opened on the most recent weeks.
+
+   The cells are plain buttons: the reveal is CSS (it starts when the grid
+   scrolls into view, see the module) and one delegated handler serves all
+   371 of them. */
 
 export interface ActivityDay {
   /** ISO date string (YYYY-MM-DD). */
@@ -48,15 +53,20 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 const WEEKDAY_LABEL_WIDTH = 28;
 const WEEKDAY_LABEL_GAP = 4;
 
+/* Smallest cell that is still readable and tappable. */
+const MIN_CELL = 10;
+const MIN_GAP = 3;
+
 /** The largest whole-pixel cell (and matching gap) that fits the width.
     Fractional cells would blur, so the grid steps down a pixel at a time
-    instead of scaling. */
+    instead of scaling — down to MIN_CELL, after which it scrolls. */
 function fitCells(weeks: number, available: number, cellSize: number, cellGap: number) {
-  for (let cell = cellSize; cell > 3; cell -= 1) {
-    const gap = cell >= 10 ? cellGap : cell >= 6 ? 2 : 1;
-    if (weeks * cell + (weeks - 1) * gap <= available) return { cell, gap };
+  for (let cell = cellSize; cell > MIN_CELL; cell -= 1) {
+    const gap = cell >= 12 ? cellGap : MIN_GAP;
+    if (weeks * cell + (weeks - 1) * gap <= available) return { cell, gap, scrolls: false };
   }
-  return { cell: 3, gap: 1 };
+  const fits = weeks * MIN_CELL + (weeks - 1) * MIN_GAP <= available;
+  return { cell: MIN_CELL, gap: MIN_GAP, scrolls: !fits };
 }
 
 export function GitHubActivityGrid({
@@ -68,7 +78,6 @@ export function GitHubActivityGrid({
   unit = ["contribution", "contributions"],
   className,
 }: GitHubActivityGridProps) {
-  const reduce = useReducedMotion();
 
   /* ---------------- bucketise into 0..4 levels --------------------------- */
   const max = React.useMemo(() => {
@@ -150,8 +159,10 @@ export function GitHubActivityGrid({
     if (!cont) return;
     const r = target.getBoundingClientRect();
     const cr = cont.getBoundingClientRect();
-    // Center-top of the cell, relative to container
-    tooltipX.set(r.left - cr.left + r.width / 2);
+    // Center-top of the cell, relative to container, kept far enough from
+    // the edges that the tooltip never spills out on a narrow screen.
+    const x = r.left - cr.left + r.width / 2;
+    tooltipX.set(Math.min(Math.max(x, 90), cr.width - 90));
     tooltipY.set(r.top - cr.top - 8);
     setHover(day);
   }
@@ -165,14 +176,26 @@ export function GitHubActivityGrid({
   );
   const weekCount = grid.weeks.length;
   const available = Math.max(0, gridViewportWidth - WEEKDAY_LABEL_WIDTH - WEEKDAY_LABEL_GAP);
-  const { cell, gap } =
+  const { cell, gap, scrolls } =
     gridViewportWidth > 0
       ? fitCells(weekCount, available, cellSize, cellGap)
-      : { cell: cellSize, gap: cellGap };
+      : { cell: cellSize, gap: cellGap, scrolls: false };
   const gridWidth = weekCount * cell + Math.max(0, weekCount - 1) * gap;
   // Empty cells before the first day; used to turn a grid position back
   // into an index in `days`.
   const startPad = grid.weeks[0]?.findIndex(Boolean) ?? 0;
+
+  // When the grid scrolls, open it on today.
+  React.useLayoutEffect(() => {
+    const node = gridViewportRef.current;
+    if (node && scrolls) node.scrollLeft = node.scrollWidth;
+  }, [scrolls, cell]);
+
+  // One handler for every cell: the cell carries its day's index.
+  function onCellEvent(e: React.SyntheticEvent<HTMLDivElement>) {
+    const target = (e.target as HTMLElement).closest<HTMLElement>("[data-i]");
+    if (target) pointAt(target, days[Number(target.dataset.i)]);
+  }
 
   return (
     <div
@@ -193,7 +216,11 @@ export function GitHubActivityGrid({
       </div>
 
       {/* Grid */}
-      <div ref={gridViewportRef} className={styles.viewport}>
+      <div
+        ref={gridViewportRef}
+        className={`${styles.viewport} ${scrolls ? styles.scrolls : ""}`}
+        onScroll={onLeave}
+      >
         <div
           className={styles.months}
           style={{ width: gridWidth, marginLeft: WEEKDAY_LABEL_WIDTH + WEEKDAY_LABEL_GAP }}
@@ -223,7 +250,13 @@ export function GitHubActivityGrid({
           </div>
 
           {/* Cells */}
-          <div className={styles.weeks} style={{ gap }}>
+          <div
+            className={styles.weeks}
+            style={{ gap }}
+            onPointerOver={onCellEvent}
+            onFocus={onCellEvent}
+            onBlur={onLeave}
+          >
             {grid.weeks.map((week, wIdx) => (
               <div key={wIdx} className={styles.week} style={{ gap }}>
                 {week.map((day, dIdx) => {
@@ -236,22 +269,16 @@ export function GitHubActivityGrid({
                     );
                   }
                   const lvl = level(day.count);
-                  // index back from the end → most recent day first
                   const fromEnd = days.length - 1 - (wIdx * 7 + dIdx - startPad);
                   return (
-                    <motion.button
+                    <button
                       key={day.date}
                       type="button"
-                      initial={reduce ? false : { opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      // Cells pop in, they don't fade: zero duration, staggered.
-                      transition={{ delay: reduce ? 0 : fromEnd * 0.0025, duration: 0 }}
-                      onPointerEnter={(e) => pointAt(e.currentTarget, day)}
-                      onFocus={(e) => pointAt(e.currentTarget, day)}
-                      onBlur={onLeave}
+                      data-i={wIdx * 7 + dIdx - startPad}
                       aria-label={`${day.count} ${day.count === 1 ? unit[0] : unit[1]} on ${day.date}`}
                       className={`${styles.cell} ${LEVEL_CLASS[lvl]}`}
-                      style={{ width: cell, height: cell }}
+                      // index back from the end → most recent day first
+                      style={{ width: cell, height: cell, ["--r" as string]: fromEnd }}
                     />
                   );
                 })}

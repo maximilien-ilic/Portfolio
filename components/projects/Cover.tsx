@@ -25,5 +25,9 @@ const MINIS: Record<string, ComponentType> = {
 export default function Cover({ work }: { work: Work }) {
   const Mini = MINIS[work.repo];
 
-  return <div className={styles.cover}>{Mini && <Mini />}</div>;
+  return (
+    <div className={styles.cover} data-live="">
+      {Mini && <Mini />}
+    </div>
+  );
 }
