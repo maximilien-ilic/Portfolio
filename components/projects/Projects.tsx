@@ -18,7 +18,7 @@ export default async function Projects() {
         </p>
         <h2 id="projects-title" className={styles.statement} data-reveal="wipe" style={{ ['--d' as string]: '0.1s' }}>
           <span className={styles.strip}>
-            <T fr="Construire pour comprendre comment ça marche." en="Built to understand how things work." />
+            <T fr="Mes projets et ce que j’y apprends." en="What I’ve been building and learning." />
           </span>
         </h2>
 

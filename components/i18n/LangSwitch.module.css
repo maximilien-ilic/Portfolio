@@ -47,15 +47,16 @@
   pointer-events: none;
 }
 
-/* Six horizontal bands, a little taller than their share so the skewed
-   edges overlap, starting off screen to the left. */
-.band {
+.shutter {
   position: absolute;
-  left: -15%;
-  width: 130%;
-  height: calc(100% / 6 + 2px);
-  transform: translateX(-115%) skewX(-12deg);
+  inset: 0;
+  background: #111113;
+  transform: translateY(105%);
   will-change: transform;
+}
+
+.edge {
+  background: #777771;
 }
 
 .word {
@@ -63,11 +64,19 @@
   inset: 0;
   display: grid;
   place-items: center;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(64px, 14vw, 180px);
-  line-height: 1;
-  color: #fff;
-  text-shadow: 0 4px 40px rgb(0 0 0 / 0.35);
+  padding: 32px;
   opacity: 0;
+}
+
+.word img {
+  width: min(74vw, 800px);
+  height: auto;
+  max-height: 55svh;
+  object-fit: contain;
+}
+
+@media (max-width: 420px) {
+  .switch {
+    padding-inline: 8px;
+  }
 }

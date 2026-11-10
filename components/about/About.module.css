@@ -34,13 +34,18 @@
   font-family: var(--font-serif);
   font-weight: 400;
   font-size: clamp(46px, 8vw, 118px);
-  line-height: 1.08;
+  line-height: 1.35;
   letter-spacing: -0.02em;
 }
 
 .strip {
+  /* Let each visible language carry its own line fragments. */
+  padding: 0;
+}
+
+.strip > [data-l] {
   background: linear-gradient(#0b0b0c, #0b0b0c) no-repeat 0 0 / 100% 100%;
-  padding: 0 0.16em 0.04em;
+  padding: 0.08em 0.18em 0.18em;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -50,7 +55,7 @@
   position: relative;
   font-style: italic;
   background: #d93a28;
-  padding: 0 0.12em;
+  padding: 0.04em 0.12em 0.12em;
   margin: 0 -0.12em;
 }
 

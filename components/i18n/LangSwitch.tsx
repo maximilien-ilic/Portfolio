@@ -5,18 +5,8 @@ import { createPortal } from 'react-dom';
 import type { Lang } from './T';
 import styles from './LangSwitch.module.css';
 
-/* The FR / EN switch, and the transition that goes with it: six bands in
-   the background's colours sweep across the whole screen, the new
-   language's name shows for a beat while everything is covered, the text
-   swaps underneath, and the bands carry on out the other side.
-
-   The language lives on <html data-lang> (set before first paint by the
-   inline script in the layout, from localStorage) and every string is
-   already in the page in both languages — see T.tsx. */
-
-const BANDS = ['#f51a29', '#ff6b0a', '#ffcc0f', '#ffb3d1', '#144dff', '#8429f5'];
-
-const NAMES: Record<Lang, string> = { fr: 'Français', en: 'English' };
+/* A dark paper shutter covers the page while the language changes.
+   The language names use outlines from Estrella, just like the hero. */
 
 function readLang(): Lang {
   return document.documentElement.dataset.lang === 'en' ? 'en' : 'fr';
@@ -66,15 +56,15 @@ export default function LangSwitch({ className }: { className?: string }) {
         setTarget(null);
         return;
       }
-      const bands = Array.from(overlay.querySelectorAll<HTMLElement>('[data-band]'));
+      const bands = Array.from(overlay.querySelectorAll<HTMLElement>('[data-shutter]'));
       const word = overlay.querySelector<HTMLElement>('[data-word]')!;
       const ease = 'cubic-bezier(0.77, 0, 0.18, 1)';
 
-      // In: bands sweep from the left, each a beat after the previous.
+      // Two sheets rise from the bottom, leaving a narrow paper edge.
       const ins = bands.map((band, i) =>
-        band.animate([{ transform: 'translateX(-115%) skewX(-12deg)' }, { transform: 'translateX(0) skewX(-12deg)' }], {
-          duration: 420,
-          delay: i * 45,
+        band.animate([{ transform: 'translateY(105%)' }, { transform: 'translateY(0)' }], {
+          duration: 460,
+          delay: i * 65,
           easing: ease,
           fill: 'forwards'
         })
@@ -90,14 +80,14 @@ export default function LangSwitch({ className }: { className?: string }) {
             { opacity: 1, transform: 'none', offset: 0.75 },
             { opacity: 0, transform: 'translateY(-10px)' }
           ],
-          { duration: 520, easing: 'ease-out', fill: 'forwards' }
+          { duration: 600, easing: 'ease-out', fill: 'forwards' }
         );
 
-        // Out: bands carry on to the right, last in first out.
+        // Both sheets continue upwards to reveal the translated page.
         const outs = bands.map((band, i) =>
-          band.animate([{ transform: 'translateX(0) skewX(-12deg)' }, { transform: 'translateX(115%) skewX(-12deg)' }], {
+          band.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-105%)' }], {
             duration: 440,
-            delay: 300 + (bands.length - 1 - i) * 45,
+            delay: 420 + (bands.length - 1 - i) * 65,
             easing: ease,
             fill: 'forwards'
           })
@@ -127,16 +117,12 @@ export default function LangSwitch({ className }: { className?: string }) {
 
       {target && createPortal(
         <div ref={overlayRef} className={styles.overlay} aria-hidden="true">
-          {BANDS.map((color, i) => (
-            <div
-              key={color}
-              data-band=""
-              className={styles.band}
-              style={{ background: color, top: `${(i * 100) / BANDS.length}%` }}
-            />
-          ))}
+          <div data-shutter="" className={`${styles.shutter} ${styles.edge}`} />
+          <div data-shutter="" className={styles.shutter} />
           <div data-word="" className={styles.word}>
-            {NAMES[target]}
+            {/* Outlined SVGs preserve Estrella’s letterforms, including ç. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`/lettering/${target}.svg`} alt="" width="800" height="240" />
           </div>
         </div>,
         document.body

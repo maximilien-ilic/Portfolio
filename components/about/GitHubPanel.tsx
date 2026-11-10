@@ -37,12 +37,12 @@ export default function GitHubPanel({ profile, repos, contributions }: Props) {
     stats && {
       key: 'active',
       value: stats.activeDays,
-      label: { fr: 'jours avec au moins une contribution', en: 'days with at least one contribution' }
+      label: { fr: 'jours d’activité', en: 'active days' }
     },
     stats && {
       key: 'streak',
       value: stats.longestStreak,
-      label: { fr: 'jours d’affilée, record', en: 'days in a row, longest streak' }
+      label: { fr: 'jours d’activité consécutifs, mon record', en: 'days in a row, longest streak' }
     },
     profile && { key: 'repos', value: profile.publicRepos, label: { fr: 'dépôts publics', en: 'public repositories' } }
   ].filter(Boolean) as { key: string; value: number; label: Text }[];
@@ -128,7 +128,7 @@ export default function GitHubPanel({ profile, repos, contributions }: Props) {
             style={{ ['--d' as string]: '0.08s' }}
           >
             <h4 id="recent-title" className={styles.subtitle}>
-              <T fr="Derniers pushs" en="Recently pushed" />
+              <T fr="Dernières mises à jour" en="Recently updated" />
             </h4>
             <ul className={styles.recent}>
               {recent.map((repo) => (

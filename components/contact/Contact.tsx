@@ -13,8 +13,8 @@ export default function Contact() {
         <h2 id="contact-title" className={styles.title} data-reveal="wipe" style={{ ['--d' as string]: '0.1s' }}>
           <span className={styles.strip}>
             <T
-              fr="Un stage, un projet ou une question ?"
-              en="Got an internship, a project or a question?"
+              fr="Une offre de stage, une idée de projet ?"
+              en="Have an internship opening or a project in mind?"
             />
           </span>
         </h2>

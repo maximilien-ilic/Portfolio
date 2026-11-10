@@ -10,7 +10,7 @@ import styles from './Hero.module.css';
    that matters is red and torn along the bottom edge. The yellow bubble on
    top is the only call to action in the hero. */
 const CHIPS = [
-  { key: 'secure', fr: 'esprit sécurité', en: 'secure-minded', tone: 'red' },
+  { key: 'secure', fr: 'la sécurité d’abord', en: 'security first', tone: 'red' },
   { key: 'dev', fr: 'développeur fullstack', en: 'fullstack developer', tone: 'grey' },
   { key: 'and', fr: '&', en: '&', tone: 'dark' },
   { key: 'student', fr: 'étudiant en cybersécurité', en: 'cybersecurity student', tone: 'grey' }

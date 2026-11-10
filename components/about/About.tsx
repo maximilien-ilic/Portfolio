@@ -23,12 +23,12 @@ export default async function About() {
             <T
               fr={
                 <>
-                  Je construis pour le web, puis j’essaie de <em>casser</em> ce que j’ai construit.
+                  Je développe pour le web et j’en teste les <em>limites</em>.
                 </>
               }
               en={
                 <>
-                  I build for the web, then I try to <em>break</em> what I built.
+                  I build for the web, then put my work to the <em>test</em>.
                 </>
               }
             />
@@ -39,20 +39,20 @@ export default async function About() {
           <div className={styles.bio}>
             <p>
               <T
-                fr="Je suis Maximilien, étudiant en troisième année à l’IIM Digital School. En dehors des cours, je reste actif avec le foot, le golf et le tennis. Curieux de nature, j’aime explorer des centres d’intérêt très différents : visiter un musée un jour, théoriser des builds sur Path of Exile le lendemain."
-                en="I’m Maximilien, a third-year student at IIM Digital School. Outside of my studies, I enjoy staying active through sports like football, golf and tennis. I’m naturally curious and enjoy exploring different interests, whether that means visiting a museum one day or theorycrafting builds in Path of Exile the next."
+                fr="Je m’appelle Maximilien et je suis en troisième année à l’IIM Digital School. En dehors des cours, je joue au foot, au golf et au tennis. J’aime aussi visiter des musées et préparer mes builds sur Path of Exile."
+                en="I’m Maximilien, a third-year student at IIM Digital School. Away from my desk, I play football, golf and tennis. I also like visiting museums and planning my next Path of Exile build."
               />
             </p>
             <p>
               <T
-                fr="Le web et la technologie font partie de mes plus grandes passions. J’aime apprendre quelque chose de nouveau chaque jour et me challenger en permanence sur des plateformes comme TryHackMe, Hack The Box et LeetCode, où j’affûte mes compétences en cybersécurité, en programmation et en résolution de problèmes."
-                en="The web and technology are among my biggest passions. I enjoy learning something new every day and constantly challenging myself through platforms like TryHackMe, Hack The Box and LeetCode, where I sharpen my skills in cybersecurity, programming and problem-solving."
+                fr="J’aime comprendre comment les applications fonctionnent et repérer leurs failles. Je m’exerce sur TryHackMe et Hack The Box pour la cybersécurité, et sur LeetCode pour la programmation."
+                en="I like understanding how applications work and finding their weak spots. I practise security on TryHackMe and Hack The Box, and work through coding problems on LeetCode."
               />
             </p>
             <p>
               <T
-                fr="Au-delà des cours, j’adore transformer des idées en projets. J’ai mené des expériences IoT avec un Raspberry Pi, développé un add-on Blender qui rend plus de 200 commandes accessibles au clavier, et exploré la rétro-ingénierie à travers un projet en C#."
-                en="Beyond the classroom, I love turning ideas into projects. I’ve worked on IoT experiments with Raspberry Pi, developed a Blender add-on featuring over 200 keyboard-accessible commands, and explored reverse engineering through a project in C#."
+                fr="Mes projets me donnent l’occasion d’essayer ce que je ne connais pas encore : de l’IoT avec un Raspberry Pi, une extension Blender pour accéder aux commandes au clavier, ou de la rétro-ingénierie en C#."
+                en="I use personal projects to try things I haven’t done before: IoT with a Raspberry Pi, a Blender add-on for keyboard navigation, and reverse engineering in C#."
               />
             </p>
           </div>
