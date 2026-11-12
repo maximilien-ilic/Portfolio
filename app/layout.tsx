@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://maximilien-ilic.fr',
     siteName: 'Maximilien Ilic — Portfolio',
-    title: 'Maximilien Ilic — Développement web & cybersécurité',
+    title: 'Maximilien Ilic · Développement web & cybersécurité',
     description,
     locale: 'fr_FR',
     images: [socialImage]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Maximilien Ilic — Développement web & cybersécurité',
+    title: 'Maximilien Ilic · Développement web & cybersécurité',
     description,
     images: [socialImage]
   }
