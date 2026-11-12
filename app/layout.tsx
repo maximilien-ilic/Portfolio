@@ -19,10 +19,34 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin']
 });
 
+const description =
+  'Portfolio de Maximilien Ilic, développeur fullstack et étudiant en cybersécurité à l’IIM Digital School.';
+const socialImage = {
+  url: '/social-home.jpg',
+  width: 1200,
+  height: 630,
+  alt: 'Page d’accueil du portfolio de Maximilien Ilic : titre dessiné sur fond animé.'
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL('https://maximilien-ilic.fr'),
   title: 'Maximilien Ilic',
-  description:
-    'Portfolio de Maximilien Ilic, développeur fullstack et étudiant en cybersécurité à l’IIM Digital School.'
+  description,
+  openGraph: {
+    type: 'website',
+    url: 'https://maximilien-ilic.fr',
+    siteName: 'Maximilien Ilic — Portfolio',
+    title: 'Maximilien Ilic — Développement web & cybersécurité',
+    description,
+    locale: 'fr_FR',
+    images: [socialImage]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Maximilien Ilic — Développement web & cybersécurité',
+    description,
+    images: [socialImage]
+  }
 };
 
 /* The phone's browser bar takes the page's darkest colour instead of
