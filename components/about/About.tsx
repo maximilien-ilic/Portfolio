@@ -23,12 +23,12 @@ export default async function About() {
             <T
               fr={
                 <>
-                  Je développe pour le web et j’en teste les <em>limites</em>.
+                  Je développe pour le web et j’en teste les <em>limites</em>
                 </>
               }
               en={
                 <>
-                  I build for the web, then put my work to the <em>test</em>.
+                  I build for the web, then put my work to the <em>test</em>
                 </>
               }
             />

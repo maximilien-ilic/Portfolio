@@ -10,7 +10,7 @@ import styles from './Hero.module.css';
    that matters is red and torn along the bottom edge. The yellow bubble on
    top is the only call to action in the hero. */
 const CHIPS = [
-  { key: 'secure', fr: 'la sécurité d’abord', en: 'security first', tone: 'red' },
+  { key: 'secure', fr: 'Sécuriser avant d’innover', en: 'security first', tone: 'red' },
   { key: 'dev', fr: 'développeur fullstack', en: 'fullstack developer', tone: 'grey' },
   { key: 'and', fr: '&', en: '&', tone: 'dark' },
   { key: 'student', fr: 'étudiant en cybersécurité', en: 'cybersecurity student', tone: 'grey' }
@@ -32,7 +32,7 @@ export default function Hero() {
         {bubble && (
           <div className={styles.bubble}>
             <a href="#contact">
-              <T fr="on en parle ?" en="let’s talk?" />
+              <T fr="on en discute ?" en="let’s talk?" />
             </a>
             <button type="button" aria-label="Fermer · Dismiss" onClick={() => setBubble(false)}>
               <svg viewBox="0 0 12 12" aria-hidden="true">
