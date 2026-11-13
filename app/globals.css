@@ -22,6 +22,11 @@ html {
   scrollbar-width: none;
 }
 
+/* Lenis handles easing itself; avoid a second browser animation. */
+html.lenis {
+  scroll-behavior: auto;
+}
+
 html::-webkit-scrollbar {
   display: none;
 }

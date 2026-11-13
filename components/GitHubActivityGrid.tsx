@@ -235,6 +235,7 @@ export function GitHubActivityGrid({
       {/* Grid */}
       <div
         ref={gridViewportRef}
+        data-lenis-prevent-horizontal=""
         className={`${styles.viewport} ${scrolls ? styles.scrolls : ""}`}
         onScroll={onLeave}
       >

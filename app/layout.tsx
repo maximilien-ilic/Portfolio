@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
+import 'lenis/dist/lenis.css';
 import './globals.css';
+import SmoothScroll from '@/components/scroll/SmoothScroll';
 
 const geist = Geist({
   variable: '--font-geist',
@@ -75,7 +77,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <SmoothScroll />
+        {children}
+      </body>
     </html>
   );
 }
